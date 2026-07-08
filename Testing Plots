@@ -1,0 +1,6 @@
+import matplotlib as plt 
+import numpy as np 
+import h5py as h5py
+
+Data= h5py.File('XRFC3CCD-xrfc3_t4_117321.hdf','r' )
+
