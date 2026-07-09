@@ -20,18 +20,28 @@ tim_Number  = 4
 
 xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
 
-image=np.array([])
-
-for i in range(0,550):
-    image=np.append(image,xrfc_data[i])
+image=xrfc_data[150:500,150:600]
 
 #plot 
-#lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
+lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
 
-#plt.figure()
+plt.figure()
 #plt.imshow(image, cmap='plasma', norm=lognorm)
+#plt.plot(225,175, marker='v')
 #plt.colorbar()
 #plt.clim(vmin=100, vmax=10000)
 #plt.show() 
 
-print(image) 
+#plt.figure()
+fft = np.fft.fft2(image)
+plt.plot((np.abs(fft))) 
+plt.show()
+
+#plt.plot(np.abs(fft))
+#plt.show() 
+
+#making a histogram! 
+#plt.hist(np.abs(fft).ravel(),bins=np.arange(0,4000000,15000), histtype='step')
+#plt.yscale('log')
+#plt.xlim(0,4000000)
+#plt.show() 

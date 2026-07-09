@@ -1,8 +1,0 @@
-import numpy as np 
-
-q=np.array([[0,1,2],[3,4,5],[6,7,8]])
-g=np.array([])
-
-g=np.append(g,q)
-
-print(g) 
