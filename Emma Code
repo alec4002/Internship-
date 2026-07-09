@@ -2,6 +2,7 @@ import pyhdf
 from pyhdf.SD import SD, SDC
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.colors as colors
 
 def load_hdf_BCcor(shotNum, ccdNum, timNum):
     file_name = f"XRFC3CCD-xrfc3_t4_117321.hdf"
@@ -18,8 +19,22 @@ tim_Number  = 4
 
 xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
 
-print(xrfc_data)
+
+#this data has a lot of back lighting, but i think i should be able to remove it relatively easily. 
+
+#Filtered=np.array()
+
+#for i in range(0,len(xrfc_data)): 
+#    q=xrfc_data[i,:]
+#    for j in range(0,len(q)):
+ #       if q[j] > 10e4:
+
+bool_arr= xrfc_data > 10000
+xrfc_data[bool_arr]=0
+lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
+
 
 plt.figure()
-plt.imshow(xrfc_data, cmap='hot', interpolation='nearest')
+plt.imshow(xrfc_data, cmap='plasma', norm=lognorm)
+plt.colorbar()
 plt.show() 
