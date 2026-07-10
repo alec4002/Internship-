@@ -1,0 +1,14 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+
+#an important note; fft is for discrete data. So i need to make a discrete approximation of a circle. Easiest way is probs to 
+#define a continuosu function and then pass over a discrete number of values. 
+
+
+
+plt.figure() 
+
+plt.plot()
