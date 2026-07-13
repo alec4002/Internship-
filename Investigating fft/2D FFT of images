@@ -1,0 +1,21 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+from PIL import Image
+
+
+#loading an image of a circle aperature 
+image=plt.imread(f'C:\Internship\Internship-\Investigating fft\Circle aperature.png')
+
+ft= np.fft.fft2(image)
+ft=np.fft.fftshift(ft)
+
+plt.figure()
+plt.imshow((np.real(ft)+1))
+plt.show()
+
+
+
+

@@ -25,32 +25,24 @@ image=xrfc_data[150:500,150:600]
 #plot 
 lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
 
-plt.figure()
-#plt.imshow(image, cmap='plasma', norm=lognorm)
-#plt.plot(225,175, marker='v')
-#plt.colorbar()
-#plt.clim(vmin=100, vmax=10000)
-#plt.show() 
-
 #this produces the FT
 fft = np.fft.fft2(image)
 #This shifts the FT so it is centred around the zero frequency component
 fft_centred=np.fft.fftshift(fft)
+fft_norm=(np.abs(fft))/np.max((np.abs(fft)))
 
-plt.plot(np.abs(fft_centred)/236912047) #Factor of 236912047 is used to normalise the curves; It is the maximum value of the raw data 
-plt.show() 
-print(fft_centred)
-print(len(np.abs(fft_centred)[:,0]))
-#This plot shows a Jinc squared envelope, as expected for a circualr object (Recall Babinet's principle). I now want to have a look
-#for any frequencies which I think are unusual. A histogram should show any outlier frequencies (expect Jinc Envelope, so any
-#addition features is from convolution of the FT of the pertubations; I will assume these are also circular). I expect an overal 
-#jinc squared with some extra winging, and N-2 interefence payttern, N being my no of pertubations
+plt.figure()
+#plt.imshow(image, cmap='plasma', norm=lognorm)
+#plt.colorbar()
+#plt.clim(vmin=100, vmax=10000)
+#plt.show() 
 
 
+#below this code gives some speckles. Means nothing to me!
+#lognorm = colors.LogNorm(vmin = 0.005, vmax =0.01 )
+#plt.imshow(fft_norm, norm=lognorm) 
+#plt.clim(vmin=0, vmax=1)
+#plt.colorbar()
+#plt.show() 
 
-#making a histogram!
-plt.figure() 
-plt.hist(np.abs(fft_centred).ravel()/236912047.0, bins=np.arange(0,1,0.015), histtype='step')
-plt.yscale('log')
 
-plt.show() 
