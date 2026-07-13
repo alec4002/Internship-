@@ -45,4 +45,6 @@ plt.figure()
 #plt.colorbar()
 #plt.show() 
 
-
+plt.imshow(np.log1p(np.real(fft_centred)))
+plt.colorbar()
+plt.show()
