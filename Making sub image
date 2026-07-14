@@ -21,6 +21,7 @@ tim_Number  = 4
 xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
 
 image=xrfc_data[150:500,150:600]
+plt.imsave('C:\Internship\Internship-\Sub image for analysis.png', image)
 
 #plot 
 lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
@@ -31,7 +32,7 @@ fft = np.fft.fft2(image)
 fft_centred=np.fft.fftshift(fft)
 fft_norm=(np.abs(fft))/np.max((np.abs(fft)))
 
-plt.figure()
+#plt.figure()
 #plt.imshow(image, cmap='plasma', norm=lognorm)
 #plt.colorbar()
 #plt.clim(vmin=100, vmax=10000)
@@ -45,6 +46,17 @@ plt.figure()
 #plt.colorbar()
 #plt.show() 
 
-plt.imshow(np.log1p(np.real(fft_centred)))
+#this really looks like the noise image in Ceurvorst paper fig 4b) 
+
+#this is just what I get if I run it how i think it should work 
+
+#plt.imshow(np.log(np.abs(fft_centred))**2,cmap='plasma')
+#plt.colorbar()
+#plt.clim(170)
+#plt.show()
+
+lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
+plt.imshow(np.abs(np.fft.ifft(fft_centred)), cmap='plasma', norm=lognorm)
 plt.colorbar()
-plt.show()
+plt.clim(vmin=100, vmax=10000)
+plt.show() 
