@@ -21,22 +21,25 @@ tim_Number  = 4
 xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
 
 image=xrfc_data[150:500,150:600]
-plt.imsave('C:\Internship\Internship-\Sub image for analysis.png', image)
+
+#Note- at one point i did try to just save the sub image so i could work on it across files. However, the imsave function 
+#normalises values of the array, and stopping it is a pain in the ass, so i will just copy the above code to load it if that 
+#is required 
 
 #plot 
 lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
 
 #this produces the FT
-fft = np.fft.fft2(image)
+#fft = np.fft.fft2(image)
 #This shifts the FT so it is centred around the zero frequency component
-fft_centred=np.fft.fftshift(fft)
-fft_norm=(np.abs(fft))/np.max((np.abs(fft)))
+#fft_centred=np.fft.fftshift(fft)
 
-#plt.figure()
-#plt.imshow(image, cmap='plasma', norm=lognorm)
-#plt.colorbar()
-#plt.clim(vmin=100, vmax=10000)
-#plt.show() 
+
+plt.figure()
+plt.imshow(image, cmap='plasma', norm=lognorm)
+plt.colorbar()
+plt.clim(vmin=100, vmax=10000)
+plt.show() 
 
 
 #below this code gives some speckles. Means nothing to me!
@@ -55,8 +58,22 @@ fft_norm=(np.abs(fft))/np.max((np.abs(fft)))
 #plt.clim(170)
 #plt.show()
 
-lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
-plt.imshow(np.abs(np.fft.ifft(fft_centred)), cmap='plasma', norm=lognorm)
-plt.colorbar()
-plt.clim(vmin=100, vmax=10000)
-plt.show() 
+#lognorm = colors.LogNorm(vmin = 100, vmax = 10000)
+#plt.imshow(np.abs(np.fft.ifft(fft_centred)), cmap='plasma', norm=lognorm)
+#plt.colorbar()
+#plt.clim(vmin=100, vmax=10000)
+#plt.show()
+
+
+ft= np.fft.fft2(image)
+#print(ft)
+#print(image)
+ft=np.fft.fftshift(ft)
+ft_squared=((np.abs(ft))**2)
+Sample_frequencies=np.fft.fftfreq(len(ft_squared),1e-3)
+
+
+plt.figure()
+plt.hist((ft_squared.ravel()), np.sort(Sample_frequencies)) #,density=True)
+#plt.yscale('log')
+plt.show()
