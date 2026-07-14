@@ -1,0 +1,26 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+from PIL import Image
+
+#creating two slits
+shape=np.zeros((100,100, 3), dtype=np.uint8)
+color = (255, 255, 255)
+shape[50, 40] = color
+shape[50, 60] = color
+
+#plt.figure()
+#plt.imshow(shape)
+#plt.show()
+print(shape)
+#getting fourier amplitudes
+ft=np.fft.fft2(shape)
+ft=np.fft.fftshift(ft)
+#spectrum=np.sort(np.fft.fftfreq(100, d=0.2))
+#print([(spectrum), (spectrum)])
+
+plt.figure()
+plt.contour([np.arange(0,50),np.arange(0,50)],np.abs(ft), levels=1000)
+plt.colorbar()
+plt.show()
+
