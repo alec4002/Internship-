@@ -1,0 +1,29 @@
+# fourier_synthesis.py
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+# Read and process image
+image = plt.imread('C:\Internship\Internship-\Investigating fft\Rect.png')
+image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
+
+
+#this plotting code gives the image in arbitrary units i.e pixel number 
+plt.figure() 
+plt.set_cmap("gray")
+ft = calculate_2dft(image)
+plt.subplot(121)
+plt.imshow(image)
+plt.axis("off")
+plt.subplot(122)
+plt.imshow(np.log(abs(ft)))
+plt.axis("off")
+plt.show()

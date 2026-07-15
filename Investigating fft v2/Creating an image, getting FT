@@ -16,11 +16,15 @@ print(shape)
 #getting fourier amplitudes
 ft=np.fft.fft2(shape)
 ft=np.fft.fftshift(ft)
-#spectrum=np.sort(np.fft.fftfreq(100, d=0.2))
-#print([(spectrum), (spectrum)])
+spectrum=(np.fft.fftfreq(100, d=10e-6))
+
+plt.imsave('C:\Internship\Internship-\Investigating fft v2\dots.png', shape)
+
+#i like what the countour plot is doing, but i think i am plotting it wrong. It seems to just plot amplitudes as x and z, rather 
+#than ploting agains k 
 
 plt.figure()
-plt.contour([np.arange(0,50),np.arange(0,50)],np.abs(ft), levels=1000)
+plt.contour([(spectrum), (spectrum)], (np.abs(ft))**2, levels=1000) 
 plt.colorbar()
 plt.show()
 

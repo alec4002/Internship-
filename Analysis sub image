@@ -21,6 +21,7 @@ tim_Number  = 4
 xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
 
 image=xrfc_data[150:500,150:600]
+plt.imsave('C:\Internship\Internship-\Sub image.png',image)
 
 #Note- at one point i did try to just save the sub image so i could work on it across files. However, the imsave function 
 #normalises values of the array, and stopping it is a pain in the ass, so i will just copy the above code to load it if that 
