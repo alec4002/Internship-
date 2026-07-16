@@ -25,6 +25,16 @@ for i in range(0,len(Sampling_freq_x)):
 
 ft = calculate_2dft(image)
 
+plt.figure() 
+plt.set_cmap("gray")
+plt.subplot(121)
+plt.imshow(image)
+plt.axis("off")
+plt.subplot(122)
+plt.imshow(np.log(abs(ft)))
+plt.axis("off")
+plt.show()
+
 
 def Add_across(m):
     M=np.array([])
