@@ -9,7 +9,7 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft v2\dots.png')
+image = plt.imread('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
@@ -45,10 +45,27 @@ def Add_across(m):
 
 Amps=Add_across(np.abs(ft))
 Amps=np.flip(Amps)
-K_spec=K_tot[0:5050]
-K_spec=np.flip(K_spec)
-print(K_spec)
+K_spec=K_tot[0:5051]
+K_spec=np.flip(K_spec) #this is not monotonically increasing: Strange. Will now just make bins which uniformally increase between,
+#max an min 
+
+
+#Bin size is veryyyy small (like 0.01) going to make some new bins, and modify the amps accordingly 
+
+def Sort(m,p):          #m matix, p no of enteries to be summed into single entry
+    S=np.array([])
+    for i in range(0,len(m), p):
+        q= m[i:i+p]
+        S=np.append(S,np.sum(q))
+    return S 
+
+New_amps=Sort(Amps, 101)
+New_bins=np.arange(0,0.7,0.7/51)
 
 plt.figure()
-plt.bar(Amps, K_spec ) 
+plt.stairs(New_amps,New_bins)
 plt.show()
+
+
+
+

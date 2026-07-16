@@ -1,0 +1,22 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+from PIL import Image
+
+#creating circle
+
+xx, yy = np.mgrid[:100, :100]
+circle = (xx-50)**2 + (yy-50)**2
+hole  = (circle < (2000 + 50)) 
+
+plt.figure()
+plt.imshow(hole)#, cmap='gray')
+plt.show()
+
+
+plt.imsave('C:\Internship\Internship-\Investigating fft v2\circle.png', hole)
+
+
+
+
+

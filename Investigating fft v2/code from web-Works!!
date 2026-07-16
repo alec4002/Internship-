@@ -9,7 +9,7 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft v2\dots.png')
+image = plt.imread('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
