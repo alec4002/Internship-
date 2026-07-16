@@ -1,8 +1,8 @@
-# fourier_synthesis.py
 import numpy as np
 import matplotlib.pyplot as plt
 
 
+#This code is just to make the matrox i will be working with, it is arbitry. 
 def calculate_2dft(input):
     ft = np.fft.ifftshift(input)
     ft = np.fft.fft2(ft)
@@ -23,28 +23,32 @@ for i in range(0,len(Sampling_freq_x)):
         K_tot=np.append(K_tot,p)
 
 
-
 ft = calculate_2dft(image)
 
-#this plotting code gives the image in arbitrary units i.e pixel number 
-plt.figure() 
-plt.set_cmap("gray")
-plt.subplot(121)
-plt.imshow(image)
-plt.axis("off")
-plt.subplot(122)
-plt.imshow(np.log(abs(ft)))
-plt.axis("off")
+
+def Add_across(m):
+    M=np.array([])
+    n=len(m[:,0])
+    l=len(m[0,:])
+
+    
+    for i in range(0,len(m)):  
+        p=m[:,0]
+        q=m[0,:]
+        R=p+q
+        R[0]*=0.5
+        M=np.append(M,R)
+        m=np.delete(m,0,0)
+        m=np.delete(m,0,1)    
+    return(M)
+
+
+Amps=Add_across(np.abs(ft))
+Amps=np.flip(Amps)
+K_spec=K_tot[0:5050]
+K_spec=np.flip(K_spec)
+print(K_spec)
+
+plt.figure()
+plt.bar(Amps, K_spec ) 
 plt.show()
-
-#plt.figure() 
-#plt.plot(K_tot, np.sum((np.abs(ft)), axis=0))
-#plt.show()
-
-#gets me something, but not really a nice dist. Maybe plot hist, using fourier amp as the 'count', binsize by the spacing of the 
-#k vals.
- 
-counts= np.abs(ft)
-bins=K_tot
-bins=np.append(bins, bins[-1]+0.0141421356237309)
-
