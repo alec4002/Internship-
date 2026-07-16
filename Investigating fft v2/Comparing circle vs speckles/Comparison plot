@@ -1,0 +1,15 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+Amps_Circle=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Amps_circle.npy')
+Bins_Circle=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Bins_circle.npy')
+Amps_Speckles=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Amps_speckles.npy')
+Bins_Speckles=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Bins_speckles.npy')
+
+plt.figure()
+plt.xlabel("spatial frequency")
+plt.ylabel("Fourier amplitude")
+plt.stairs(Amps_Circle,Bins_Circle, label="Circle")
+plt.stairs(Amps_Speckles,Bins_Speckles, label="Speckles")
+plt.legend()
+plt.show()

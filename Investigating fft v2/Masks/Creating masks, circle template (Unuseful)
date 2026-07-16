@@ -9,12 +9,16 @@ xx, yy = np.mgrid[:100, :100]
 circle = (xx-50)**2 + (yy-50)**2
 hole  = (circle < (2000 + 50)) 
 
+s_circle=  (xx-25)**2 + (yy-50)**2
+mini_hole=(s_circle < (500 + 50))
+
 plt.figure()
 plt.imshow(hole)#, cmap='gray')
+plt.imshow(mini_hole)
 plt.show()
 
 
-plt.imsave('C:\Internship\Internship-\Investigating fft v2\circle.png', hole)
+#plt.imsave('C:\Internship\Internship-\Investigating fft v2\circle.png', hole)
 
 
 

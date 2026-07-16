@@ -1,0 +1,18 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+from PIL import Image
+
+shape=np.zeros((300,300, 3), dtype=np.uint8)
+color = (255, 255, 255)
+
+for j in range(0,300):
+    for i in range(0,300):
+        if (i-150)**2 + (j-150)**2 <= 120**2:
+            shape[i,j]=color
+
+plt.figure()
+plt.imshow(shape)
+plt.show() 
+
+plt.imsave('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png',shape)

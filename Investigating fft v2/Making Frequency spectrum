@@ -69,12 +69,17 @@ def Sort(m,p):          #m matix, p no of enteries to be summed into single entr
         S=np.append(S,np.sum(q))
     return S 
 
-New_amps=Sort(Amps, 101)
-New_bins=np.arange(0,0.7,0.7/51)
+#Making smaller bins so data is more easily visualised
+New_amps=Sort(Amps, 303)
+New_bins=np.arange(0,0.7,0.7/151)
 
-plt.figure()
-plt.stairs(New_amps,New_bins)
-plt.show()
+#saving the raw data to compare pertubation sizes
+np.save('C:\Internship\Internship-\Investigating fft v2\Amps_circle',New_amps)
+np.save('C:\Internship\Internship-\Investigating fft v2\Bins_circle',New_bins)
+
+#plt.figure()
+#plt.stairs(New_amps,New_bins)
+#plt.show()
 
 
 
