@@ -7,9 +7,10 @@ Amps_Speckles=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing 
 Bins_Speckles=np.load('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Bins_speckles.npy')
 
 plt.figure()
-plt.xlabel("spatial frequency")
+plt.xlabel("Spatial frequency")
 plt.ylabel("Fourier amplitude")
 plt.stairs(Amps_Circle,Bins_Circle, label="Circle")
 plt.stairs(Amps_Speckles,Bins_Speckles, label="Speckles")
 plt.legend()
+plt.savefig('C:\Internship\Internship-\Investigating fft v2\Comparing circle vs speckles\Comparison plot.png', bbox_inches='tight')
 plt.show()

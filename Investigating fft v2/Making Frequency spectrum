@@ -12,6 +12,7 @@ def calculate_2dft(input):
 image = plt.imread('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
+
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
 Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
 
@@ -27,14 +28,15 @@ ft = calculate_2dft(image)
 
 plt.figure() 
 plt.set_cmap("gray")
-plt.subplot(121)
-plt.imshow(image)
-plt.axis("off")
-plt.subplot(122)
+#plt.subplot(121)
+#plt.imshow(image)
+#plt.axis("off")
+#plt.subplot(122)
 plt.imshow(np.log(abs(ft)))
 plt.axis("off")
 plt.show()
 
+#plt.imsave('C:\Internship\Internship-\Investigating fft v2\Masks\circle_ft.png', np.log(abs(ft)))
 
 def Add_across(m):
     M=np.array([])
@@ -59,6 +61,14 @@ K_spec=K_tot[0:5051]
 K_spec=np.flip(K_spec) #this is not monotonically increasing: Strange. Will now just make bins which uniformally increase between,
 #max an min 
 
+plt.figure()
+plt.xlabel("Entry index")
+plt.ylabel("Spatial Frequency")
+plt.plot(np.arange(0,len(K_spec)), K_spec)
+plt.legend() 
+plt.savefig('C:\Internship\Internship-\Investigating fft v2\k_spec bug.png', bbox_inches='tight')
+plt.show()
+
 
 #Bin size is veryyyy small (like 0.01) going to make some new bins, and modify the amps accordingly 
 
@@ -74,8 +84,8 @@ New_amps=Sort(Amps, 303)
 New_bins=np.arange(0,0.7,0.7/151)
 
 #saving the raw data to compare pertubation sizes
-np.save('C:\Internship\Internship-\Investigating fft v2\Amps_circle',New_amps)
-np.save('C:\Internship\Internship-\Investigating fft v2\Bins_circle',New_bins)
+#np.save('C:\Internship\Internship-\Investigating fft v2\Amps_circle',New_amps)
+#np.save('C:\Internship\Internship-\Investigating fft v2\Bins_circle',New_bins)
 
 #plt.figure()
 #plt.stairs(New_amps,New_bins)
