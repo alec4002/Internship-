@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.colors as colors
 from PIL import Image
 
-Circle=plt.imread('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png')
+Circle=plt.imread('C:\Internship\Internship-\Investigating fft\Masks\circle.png')
 Circle=Circle[:, :, :3].mean(axis=2)  # Convert to grayscale
 
 #notation; i is y co-ord, j is x co-ord
@@ -11,21 +11,51 @@ Circle=Circle[:, :, :3].mean(axis=2)  # Convert to grayscale
 for i in range(0,300):
     for j in range(0,300):
         if (i-90)**2 + (j-90)**2 <= 30**2:
-            Circle[i,j]=2
+            Circle[i,j]=1.5
 
 #speckle at (210,180)
 for i in range(0,300):
     for j in range(0,300):
         if (i-180)**2 + (j-210)**2 <= 30**2:
-            Circle[i,j]=2
+            Circle[i,j]=1.5
+
+#speckle at (175, 225)
+for i in range(0,300):
+    for j in range(0,300):
+        if (i-225)**2 + (j-175)**2 <= 20**2:
+            Circle[i,j]=1.5
+
+#speckle at (200,75)
+for i in range(0,300):
+    for j in range(0,300):
+        if (i-75)**2 + (j-200)**2 <= 20**2:
+            Circle[i,j]=1.5            
 
 #speckle at (90,200)
 for i in range(0,300):
     for j in range(0,300):
         if (i-200)**2 + (j-90)**2 <= 15**2:
-            Circle[i,j]=2
+            Circle[i,j]=1.5
+
+#speckle at (155,145)
+for i in range(0,300):
+    for j in range(0,300):
+        if (i-145)**2 + (j-155)**2 <= 15**2:
+            Circle[i,j]=1.5  
+
+#speckle at (125,240)
+for i in range(0,300):
+    for j in range(0,300):
+        if (i-190)**2 + (j-150)**2 <= 20**2:
+            Circle[i,j]=1.5 
+
+#speckle at (100,150)
+for i in range(0,300):
+    for j in range(0,300):
+        if (i-150)**2 + (j-100)**2 <= 25**2:
+            Circle[i,j]=1.5
 
 plt.figure()
 plt.imshow(Circle)
 plt.show()
-plt.imsave('C:\Internship\Internship-\Investigating fft v2\Masks\speckles.png', Circle)
+plt.imsave('C:\Internship\Internship-\Investigating fft\Masks\more speckles.png', Circle)

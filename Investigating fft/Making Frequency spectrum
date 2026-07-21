@@ -9,7 +9,7 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft v2\Masks\circle.png')
+image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\more speckles.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 
@@ -61,13 +61,13 @@ K_spec=K_tot[0:5051]
 K_spec=np.flip(K_spec) #this is not monotonically increasing: Strange. Will now just make bins which uniformally increase between,
 #max an min 
 
-plt.figure()
-plt.xlabel("Entry index")
-plt.ylabel("Spatial Frequency")
-plt.plot(np.arange(0,len(K_spec)), K_spec)
-plt.legend() 
-plt.savefig('C:\Internship\Internship-\Investigating fft v2\k_spec bug.png', bbox_inches='tight')
-plt.show()
+#plt.figure()
+#plt.xlabel("Entry index")
+#plt.ylabel("Spatial Frequency")
+#plt.plot(np.arange(0,len(K_spec)), K_spec)
+#plt.legend() 
+#plt.savefig('C:\Internship\Internship-\Investigating fft v2\k_spec bug.png', bbox_inches='tight')
+#plt.show()
 
 
 #Bin size is veryyyy small (like 0.01) going to make some new bins, and modify the amps accordingly 
@@ -87,9 +87,9 @@ New_bins=np.arange(0,0.7,0.7/151)
 #np.save('C:\Internship\Internship-\Investigating fft v2\Amps_circle',New_amps)
 #np.save('C:\Internship\Internship-\Investigating fft v2\Bins_circle',New_bins)
 
-#plt.figure()
-#plt.stairs(New_amps,New_bins)
-#plt.show()
+plt.figure()
+plt.stairs(New_amps,New_bins)
+plt.show()
 
 
 
