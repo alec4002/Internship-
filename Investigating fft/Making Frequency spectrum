@@ -9,8 +9,9 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\more speckles.png')
-image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+image = plt.imread('C:\Internship\Internship-\Sub image.png')
+#image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+image=image*(1/10000)
 
 
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
@@ -25,7 +26,7 @@ for i in range(0,len(Sampling_freq_x)):
 
 
 ft = calculate_2dft(image)
-
+ft=ft[:, :, :3].mean(axis=2)  
 plt.figure() 
 plt.set_cmap("gray")
 #plt.subplot(121)
