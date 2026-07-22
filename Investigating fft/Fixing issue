@@ -1,0 +1,42 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+#This code is just to make the matrox i will be working with, it is arbitry. 
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+# Read and process image
+image = plt.imread('Investigating fft/Masks/dots.png')
+image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+print(image)
+
+plt.figure()
+plt.set_cmap('gray')
+plt.imshow(image)
+plt.show()
+
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
+
+K_tot=np.array([])
+
+for i in range(0,len(Sampling_freq_x)):
+    for j in range(0,len(Sampling_freq_y)):
+        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+        K_tot=np.append(K_tot,p)
+
+
+ft = calculate_2dft(image)
+#ft=ft[:, :, :3].mean(axis=2)  
+plt.figure() 
+plt.set_cmap("gray")
+#plt.subplot(121)
+#plt.imshow(image)
+#plt.axis("off")
+#plt.subplot(122)
+plt.imshow(np.log(abs(ft)))
+plt.axis("off")
+plt.show()

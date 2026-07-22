@@ -4,21 +4,18 @@ import matplotlib.colors as colors
 from PIL import Image
 
 #creating two slits
-shape=np.zeros((100,100, 3), dtype=np.uint8)
+shape=np.zeros((300,300, 3), dtype=np.uint8)
 color = (255, 255, 255)
-shape[50, 40] = color
-shape[50, 60] = color
+shape[150, 120] = color
+shape[150, 180] = color
+#shape[180, 120] = color
+#shape[180, 180] = color
 
-#plt.figure()
-#plt.imshow(shape)
-#plt.show()
-print(shape)
-#getting fourier amplitudes
-ft=np.fft.fft2(shape)
-ft=np.fft.fftshift(ft)
-spectrum=(np.fft.fftfreq(100, d=10e-6))
+plt.figure()
+plt.imshow(shape)
+plt.show()
 
-
+plt.imsave('Investigating fft/Masks/dots.png', shape)
 
 
 

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-image = plt.imread('C:\Internship\Internship-\Investigating fft v2\dots.png')
+image = plt.imread('Investigating fft/Masks/dots.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
@@ -15,4 +15,4 @@ for i in range(0,len(Sampling_freq_x)):
         p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
         K_tot=np.append(K_tot,p)
 
-print(len(K_tot))
+
