@@ -10,35 +10,75 @@ def calculate_2dft(input):
 image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\dots.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
-
+#create the range of k_x, k_y values
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
 Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
 
-
+#looking at the different 
 x,y=np.meshgrid(Sampling_freq_x,Sampling_freq_y)
-
 z=(x**2+y**2)**(0.5)
-
 #plt.figure 
 #plt.contour(x,y,z,300)
 #plt.show()
 
-#This is basically showing me that I will have a range of k values 
-
-K_tot=np.empty([])
+#making the k space
+K_tot=np.empty([300,300])
 
 for i in range(0,len(Sampling_freq_x)):
     q=np.array([])
     for j in range(0,len(Sampling_freq_y)):
         p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
         q=np.append(q,p)
-    K_tot=np.append(K_tot,np.array([q]))#,axis=0)
+    K_tot[i]=q
 
-print((K_tot))        
+#fourier transfer of the image 
+ft = calculate_2dft(image)   
+ft=np.log(abs(ft))
+
+#p=np.array((K_tot, ft)).T
+#p=zip(p)
+#p=list(p)
+
+Tot=np.empty([300**2,2])
+
+flat_k =K_tot.ravel() 
+flat_ft= ft.ravel()
+
+#storing corresponging k values and fourier amplitudes
+for i in range(0,300**2):
+    S=np.array([flat_k[i], flat_ft[i]])
+    Tot[i]=S
+
+#sorting the matrix in order of increasing k values
+Tot=np.sort(Tot, axis=0)
+
+
+def binning(m):
+    Binned=np.empty([300**2,2])
+    for i in range(0,45000):
+        entry=m[i]
+        entry_1=m[i+1]
+
+        if entry[0] == entry_1[0]: 
+            amp= entry[1] + entry[1]
+            k_amp=np.array([entry[0],amp])
+            Binned[i]=k_amp
+            m=np.delete(m, i+1, axis=0)
+
+
+        else:
+            Binned[i]=entry
+    return Binned
+
+Tot_binned=binning(abs(Tot))
+print(Tot)
+#print(Tot_binned[:,1])
 
 #plt.figure()
-#plt.hist(K_tot)
+#plt.scatter(Tot_binned[:,0],Tot_binned[:,1])
 #plt.show()
 
-#ft = calculate_2dft(image)
-#print(np.log(abs(ft)))
+
+
+
+

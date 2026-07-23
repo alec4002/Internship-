@@ -1,1 +1,11 @@
+import numpy as np 
 
+p=np.empty((3,2))
+q=np.array([1,2])
+w=np.array([3,2])
+e=np.array([4,2])
+p[0]=e
+p[1]=q
+p[2]=w
+
+print(np.sort(p,axis=0))
