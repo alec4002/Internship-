@@ -7,7 +7,7 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\dots.png')
+image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\circle.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 #create the range of k_x, k_y values
@@ -51,34 +51,21 @@ for i in range(0,300**2):
 
 #sorting the matrix in order of increasing k values
 Tot=np.sort(Tot, axis=0)
+Tot= np.abs(Tot)
+
+condlist= [Tot[:,0] ==3.33333333e-03]
+choicelist= [Tot[:,1]]
 
 
-def binning(m):
-    Binned=np.empty([300**2,2])
-    for i in range(0,45000):
-        entry=m[i]
-        entry_1=m[i+1]
-
-        if entry[0] == entry_1[0]: 
-            amp= entry[1] + entry[1]
-            k_amp=np.array([entry[0],amp])
-            Binned[i]=k_amp
-            m=np.delete(m, i+1, axis=0)
-
-
-        else:
-            Binned[i]=entry
-    return Binned
-
-Tot_binned=binning(abs(Tot))
-print(Tot)
+#Tot_binned=binning(abs(Tot))
+#print(Tot_binned)
 #print(Tot_binned[:,1])
 
 #plt.figure()
-#plt.scatter(Tot_binned[:,0],Tot_binned[:,1])
+#plt.hist(Tot_binned[:,0])#,Tot_binned[:,1])
 #plt.show()
 
-
+#print(abs(Tot[0:20]))
 
 
 
