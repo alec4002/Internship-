@@ -53,8 +53,24 @@ for i in range(0,300**2):
 Tot=np.sort(Tot, axis=0)
 Tot= np.abs(Tot)
 
-condlist= [Tot[:,0] ==3.33333333e-03]
-choicelist= [Tot[:,1]]
+#Binning k val duplicates. Note than m must be Nx2 dimensional
+def Binning(m):
+    m_mod=m
+    amps=np.array([])
+    k_vals=np.unique(m[:,0]) 
+    for i in range(0,len(k_vals)):
+        Test=k_vals[i]
+        Temp_store=np.array([])
+        for j in range(0,10):
+            while m_mod[:,0][j] == Test:
+                Temp_store=np.append(Temp_store, m_mod[:,1][j])
+            else:
+                Amps=np.append(Amps, np.sum(Temp_store))
+                m_mod=np.delete(m, [np.arange(0, len(Temp_store))], axis=0) 
+                print(i)
+        return (k_vals, amps)
+
+print(Binning(Tot))
 
 
 #Tot_binned=binning(abs(Tot))
