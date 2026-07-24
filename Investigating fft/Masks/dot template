@@ -15,7 +15,7 @@ plt.figure()
 plt.imshow(shape)
 plt.show()
 
-plt.imsave('Investigating fft/Masks/dots.png', shape)
+#plt.imsave('Investigating fft/Masks/dots.png', shape)
 
 
 

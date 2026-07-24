@@ -7,22 +7,16 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 # Read and process image
-image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\more speckles.png')
+image = plt.imread('C:\Internship\Internship-\Investigating fft\Masks\dots_ft.png')
 image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
 
 #create the range of k_x, k_y values
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
 Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
 
-#looking at the different 
-x,y=np.meshgrid(Sampling_freq_x,Sampling_freq_y)
-z=(x**2+y**2)**(0.5)
-#plt.figure 
-#plt.contour(x,y,z,300)
-#plt.show()
 
 #making the k space
-K_tot=np.empty([300,300])
+K_tot=np.empty([100,100])
 
 for i in range(0,len(Sampling_freq_x)):
     q=np.array([])
@@ -33,19 +27,19 @@ for i in range(0,len(Sampling_freq_x)):
 
 #fourier transfer of the image 
 ft = calculate_2dft(image)   
-ft=np.log(abs(ft))
+ft=np.log1p(abs(ft))
 
 #p=np.array((K_tot, ft)).T
 #p=zip(p)
 #p=list(p)
 
-Tot=np.empty([300**2,2])
+Tot=np.empty([100**2,2])
 
 flat_k =K_tot.ravel() 
 flat_ft= ft.ravel()
 
 #storing corresponging k values and fourier amplitudes
-for i in range(0,300**2):
+for i in range(0,100**2):
     S=np.array([flat_k[i], flat_ft[i]])
     Tot[i]=S
 
@@ -69,20 +63,31 @@ def Sort(m):
     
 
 k_vals, Amps = (Sort(Tot))
+print(Amps)
 
+Raw_sorted=np.empty([len(k_vals),2])
 
+for i in range(0,len(k_vals)):
+    S=np.array([k_vals[i], Amps[i]])
+    Raw_sorted[i]=S
 
-def Bin(m,p):          #m matix, p no of enteries to be summed into single entry
-    S=np.array([])
-    for i in range(0,len(m), p):
-        q= m[i:i+p]
-        S=np.append(S,np.sum(q))
-    return S 
+print(Raw_sorted)
 
-k_vals= Bin(k_vals, 55)
-k_vals=np.append(k_vals, (k_vals[-1] + (k_vals[-1]-k_vals[-2])))
-Amps= Bin(Amps, 55)
+def Bin(m,p):   #m is matrix, p is the number of bins
+    amps=np.array([])      
+    bins=np.arange(0,np.max(m[:,0]),(np.max(np.max(m[:,0])))/p)
+    for i in range(0, len(bins)):
+        Test=bins[i]   
+        Temp_store=np.array([])
+        boolian= np.any( m <= Test, axis=1)
+        indexs= np.where(boolian == True)[0]
+        for i in indexs: 
+            Temp_store=np.append(Temp_store, m[:,1][i])
+        amps=np.append(amps, np.sum(Temp_store))
+    bins=np.append(bins, (bins[-1]+(np.max(np.max(m[:,0])))/p))
+    return(amps, bins)
 
-np.save('C:\Internship\Internship-\Azimuthal Binning\Amps speckels',Amps)
-np.save('C:\Internship\Internship-\Azimuthal Binning\Bins speckels',k_vals)
-
+counts, bins= Bin(Raw_sorted, 200)
+plt.figure()
+plt.stairs(counts, bins)
+plt.show()
