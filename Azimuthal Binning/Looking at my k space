@@ -67,7 +67,6 @@ def Binning(m):
             else:
                 Amps=np.append(Amps, np.sum(Temp_store))
                 m_mod=np.delete(m, [np.arange(0, len(Temp_store))], axis=0) 
-                print(i)
         return (k_vals, amps)
 
 print(Binning(Tot))
