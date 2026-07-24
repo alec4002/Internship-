@@ -1,0 +1,17 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+Amps_Circle=np.load('C:\Internship\Internship-\Azimuthal Binning\Amps circle.npy')
+Bins_Circle=np.load('C:\Internship\Internship-\Azimuthal Binning\Bins circle.npy')
+Amps_Speckles=np.load('C:\Internship\Internship-\Azimuthal Binning\Amps speckels.npy')
+Bins_Speckles=np.load('C:\Internship\Internship-\Azimuthal Binning\Bins speckels.npy')
+
+plt.figure()
+plt.xlabel("Spatial frequency")
+plt.ylabel("Fourier amplitude")
+plt.stairs(Amps_Circle,Bins_Circle, label="Circle")
+plt.stairs(Amps_Speckles,Bins_Speckles, label="Speckles")
+plt.yscale('log')
+plt.legend()
+plt.savefig('C:\Internship\Internship-\Azimuthal Binning\Comparison plot.png', bbox_inches='tight')
+plt.show()
