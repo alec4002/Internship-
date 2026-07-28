@@ -58,10 +58,12 @@ np.save('C:\Internship\Internship-\Image FIltering\strip_noise.npy', strip_noise
 
 S1=np.load('C:\Internship\Internship-\Image FIltering\strip.npy')
 S2=np.load('C:\Internship\Internship-\Image FIltering\strip_noise.npy')
-np.save('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy', S1-S2)
+#np.save('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy', S1-S2)
 
-plt.figure()
-plt.imshow(S1-S2)
-plt.colorbar()
-plt.clim(0,2000)
-plt.show()
+#show the no background image
+#plt.figure()
+#plt.imshow(S1-S2)
+#plt.colorbar(location='bottom')
+#plt.clim(0,2000)
+#plt.show()
+
