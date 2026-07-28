@@ -1,0 +1,29 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+Counts_Circle=np.load('C:\Internship\Internship-\Azimuthal Binning\Plot data\circle_counts.npy')
+Bins_Circle=np.load('C:\Internship\Internship-\Azimuthal Binning\Plot data\circle_bins.npy')
+Counts_Speckles=np.load('C:\Internship\Internship-\Azimuthal Binning\Plot data\more_speckles_counts.npy')
+Bins_Speckles=np.load('C:\Internship\Internship-\Azimuthal Binning\Plot data\more_speckles_bins.npy')
+
+Counts_Circle_norm=Counts_Circle/np.max(Counts_Circle)
+Counts_Speckles_norm=Counts_Speckles/np.max(Counts_Speckles)
+
+plt.figure()
+
+plt.subplot(1,2,1)
+plt.xlabel("Spatial frequency")
+plt.ylabel("Fourier amplitude")
+plt.stairs(Counts_Circle/np.max(Counts_Circle),Bins_Circle, label="Circle")
+plt.stairs(Counts_Speckles/np.max(Counts_Speckles),Bins_Speckles, label="Speckles")
+plt.legend()
+
+plt.subplot(1,2,2)
+plt.xlabel("Spatial frequency")
+plt.stairs(Counts_Circle/np.max(Counts_Circle),Bins_Circle, label="Circle")
+plt.stairs(Counts_Speckles/np.max(Counts_Speckles),Bins_Speckles, label="Speckles")
+plt.yscale('log')
+plt.legend()
+#plt.savefig('C:\Internship\Internship-\Azimuthal Binning\Comparison plot.png', bbox_inches='tight')
+plt.show()
+

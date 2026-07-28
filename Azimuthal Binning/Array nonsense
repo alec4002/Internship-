@@ -4,7 +4,7 @@ p=np.array([[1,2],[2,5],[1,8]])
 
 #print(p[:,0])
 boolian=(np.any(p==1, axis=1))#, where=489))
-
+print(boolian)
 
 #def Binning(m):
 #    m_mod=m
