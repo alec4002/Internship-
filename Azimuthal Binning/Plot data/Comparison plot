@@ -24,6 +24,6 @@ plt.stairs(Counts_Circle/np.max(Counts_Circle),Bins_Circle, label="Circle")
 plt.stairs(Counts_Speckles/np.max(Counts_Speckles),Bins_Speckles, label="Speckles")
 plt.yscale('log')
 plt.legend()
-#plt.savefig('C:\Internship\Internship-\Azimuthal Binning\Comparison plot.png', bbox_inches='tight')
+#plt.savefig('C:\Internship\Internship-\Azimuthal Binning\Plot data\Comparison plot, circle v speckle.png', bbox_inches='tight')
 plt.show()
 
