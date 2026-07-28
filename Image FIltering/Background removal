@@ -1,0 +1,67 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+
+#Emma's code to load the data into python
+def load_hdf_BCcor(shotNum, ccdNum, timNum):
+    file_name = f"C:\Internship\Internship-\Data\XRFC3CCD-xrfc3_t4_117321.hdf"
+
+    hdf_file  = SD(file_name, SDC.READ)
+    sds_obj   = hdf_file.select(0)
+    data      = sds_obj.get()
+    return data[0] - data[1]
+
+# Backlighter is SFC3CCD in TIM04
+shot_Number = 117315
+ccd_Number  = 3
+tim_Number  = 4
+
+#Loading the all strips
+xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
+
+#cropping to the 2nd strip from the bottom 
+strip=xrfc_data[1100:1500,85:1965]
+np.save('C:\Internship\Internship-\Image FIltering\strip.npy', strip)    
+
+strip_noise=xrfc_data[1100:1500,85:1965]
+
+
+#reading 1-4 as left-right
+
+#circle 1 
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-300)**2 <= 150**2: #and (i-200)**2 + (j-300)**2 >= 145**2 :
+            strip_noise[i,j]=0
+
+#circle 2
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-760)**2 <= 150**2: #and (i-200)**2 + (j-760)**2 >= 145**2 :
+            strip_noise[i,j]=0           
+
+#circle 3
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-1200)**2 <= 150**2: #and (i-200)**2 + (j-1200)**2 >= 145**2 :
+            strip_noise[i,j]=0            
+
+#circle 4
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-1650)**2 <= 150**2: #and (i-200)**2 + (j-1650)**2 >= 145**2 :
+            strip_noise[i,j]=0    
+
+np.save('C:\Internship\Internship-\Image FIltering\strip_noise.npy', strip_noise)        
+
+S1=np.load('C:\Internship\Internship-\Image FIltering\strip.npy')
+S2=np.load('C:\Internship\Internship-\Image FIltering\strip_noise.npy')
+np.save('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy', S1-S2)
+
+plt.figure()
+plt.imshow(S1-S2)
+plt.colorbar()
+plt.clim(0,2000)
+plt.show()
