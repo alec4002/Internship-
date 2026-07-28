@@ -6,16 +6,16 @@ from PIL import Image
 #creating two slits
 shape=np.zeros((300,300, 3), dtype=np.uint8)
 color = (255, 255, 255)
-shape[150, 120] = color
-shape[150, 180] = color
-#shape[180, 120] = color
+shape[150, 149] = color
+shape[150, 150] = color
+shape[150, 151] = color
 #shape[180, 180] = color
 
 plt.figure()
 plt.imshow(shape)
 plt.show()
 
-plt.imsave('Investigating fft/Masks/dots_space.png', shape)
+plt.imsave('Investigating fft/Masks/dots_centre.png', shape)
 
 
 

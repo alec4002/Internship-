@@ -2,9 +2,9 @@ import numpy as np
 
 p=np.array([[1,2],[2,5],[1,8]])
 
-print(p[:,0])
+#print(p[:,0])
 boolian=(np.any(p==1, axis=1))#, where=489))
-print(np.where(boolian == True)[0])
+
 
 #def Binning(m):
 #    m_mod=m
