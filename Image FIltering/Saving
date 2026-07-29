@@ -1,0 +1,43 @@
+Background= S1 - S2 
+
+def average_noise(m):            #m is a 2D matrix. This averaging gives a high value compared to the background i see; may need to increase the region if interest again  
+    vals=np.array([])
+    flat_m= m.ravel() 
+    indexs= np.where((flat_m > 0) & (flat_m < 1000))[0]
+    for j in indexs:
+        vals=np.append(vals, flat_m[j])
+    return(np.average(vals))
+
+average_val=400.09621071232624
+
+flat_background=np.zeros((400,1880))
+
+
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-300)**2 <= 170**2:# and (i-200)**2 + (j-300)**2 >= 165**2 :
+            S2[i,j]=average_val
+
+#circle 2
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-760)**2 <= 170**2:# and (i-200)**2 + (j-760)**2 >= 165**2 :
+            S2[i,j]=average_val           
+
+#circle 3
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-1200)**2 <= 170**2:# and (i-200)**2 + (j-1200)**2 >= 165**2 :
+            S2[i,j]=average_val            
+
+#circle 4
+for j in range(0,1880):
+    for i in range(0,400):
+        if (i-200)**2 + (j-1650)**2 <= 170**2: # and (i-200)**2 + (j-1650)**2 >= 165**2 :
+            S2[i,j]=average_val
+
+plt.figure()
+plt.imshow(S1-S2)
+plt.colorbar(location= 'bottom')
+plt.clim(0,2000)
+plt.show() 

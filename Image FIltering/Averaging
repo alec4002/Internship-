@@ -1,0 +1,36 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+
+strip=np.load('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy')
+
+#getting regions of interest - need to change as i changed the size of the ROI 
+
+
+#reading 1-4 as left-right
+#circle 1
+Circle_1=strip[50:350, 150:450]
+
+#circle 2
+Circle_2=strip[50:350,610:910]
+#circle 3
+
+Circle_3=strip[50:350, 1050:1350]
+#circle 4
+
+Circle_4=strip[50:350, 1500:1800]
+
+average= (Circle_1 + Circle_2 + Circle_3 + Circle_4)/4
+
+plt.figure()
+plt.imshow(average)
+plt.colorbar(location='bottom')
+#plt.clim(0,2500)
+#plt.imsave('C:\Internship\Internship-\Image FIltering\Strip_2_aveage_image.png', average)
+plt.show()
+
+
+print(average)
+#np.save('C:\Internship\Internship-\Image FIltering\Strip_2_aveage_image.npy',average)

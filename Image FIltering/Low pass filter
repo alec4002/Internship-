@@ -1,29 +1,46 @@
-import pyhdf 
-from pyhdf.SD import SD, SDC
-import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.colors as colors
+import matplotlib.pyplot as plt
 
-strip=np.load('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy')
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
 
-#getting regions of interest 
+
+# Read and process image
+image = np.load('C:\Internship\Internship-\Image FIltering\Strip_2_aveage.npy')
+#image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+
+#create the range of k_x, k_y values
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(image[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(image[0,:])))
 
 
-#reading 1-4 as left-right
-#circle 1
-Circle_1=strip[50:350, 150:450]
+#making the k space
+K_tot=np.empty([300,300])
 
-#circle 2
-Circle_2=strip[50:350, 150:450]
-#circle 3
+for i in range(0,len(Sampling_freq_x)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_y)):
+        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
 
-Circle_3=strip[50:350, 150:450]
-#circle 4
+#fourier transfer of the image 
+ft = calculate_2dft(image)   
 
-Circle_4=strip[50:350, 150:450]
+for j in range(0,300):
+    for i in range(0,300):
+        if (i-150)**2 + (j-150)**2 >= 30**2: #and (i-200)**2 + (j-300)**2 >= 145**2 :
+            ft[i,j]=0
+
 
 plt.figure()
-plt.imshow(Circle_2)
-plt.colorbar(location='bottom')
-plt.clim(0,2500)
+plt.subplot(1,2,1)
+plt.imshow(np.log1p(np.abs(ft)))
+
+plt.subplot(1,2,2)
+plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(ft))))
 plt.show()
+
+
