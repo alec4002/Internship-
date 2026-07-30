@@ -1,0 +1,36 @@
+import numpy as np
+from scipy import signal, datasets
+import matplotlib.pyplot as plt
+import skimage
+
+
+def makeGaussian(size, rank, std_x, std_y, center=None):
+    """ Make a square gaussian kernel.
+
+    size is the length of a side of the square
+    fwhm is full-width-half-maximum, which
+    can be thought of as an effective radius.
+    """
+
+    x = np.arange(0, size, 1, float)
+    y = x[:,np.newaxis]
+
+    if center is None:
+        x0 = y0 = size // 2
+    else:
+        x0 = center[0]
+        y0 = center[1]
+
+    return np.exp(-(((x-x0)**2/(2*std_x**2))+((y-y0)**2/(2*std_y**2)))**rank)
+
+gauss=makeGaussian(100, 5, 15, 10, center=(50,50))
+line_out=gauss[50]
+
+
+plt.figure()
+plt.imshow(gauss)
+plt.show()
+
+plt.figure()
+plt.plot(np.arange(0,100), line_out)
+plt.show()

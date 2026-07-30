@@ -3,6 +3,9 @@ from pyhdf.SD import SD, SDC
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.colors as colors
+import scipy 
+from scipy import interpolate
+from scipy.interpolate import RectBivariateSpline
 
 #Emma's code to load the data into python
 def load_hdf_BCcor(shotNum, ccdNum, timNum):
@@ -59,51 +62,53 @@ np.save('C:\Internship\Internship-\Image FIltering\strip_noise.npy', strip_noise
 S1=np.load('C:\Internship\Internship-\Image FIltering\strip.npy')
 S2=np.load('C:\Internship\Internship-\Image FIltering\strip_noise.npy')
 #np.save('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy', S1-S2)
-
-#show the no background image
 plt.figure()
 plt.imshow(S2)
-plt.colorbar(location='bottom')
+plt.colorbar()
 plt.clim(0,2000)
 plt.show()
-
-Background= S1 - S2 
+#show the no background image
+#plt.figure()
+#plt.imshow(S2)
+#plt.colorbar(location='bottom')
+#plt.clim(0,2000)
+#plt.show()
 
 def average_noise(m):            #m is a 2D matrix. This averaging gives a high value compared to the background i see; may need to increase the region if interest again  
-    vals=np.array([])
+    vals=np.array([])            #This isnt useful. Will use scipy interpolation to get a flat noise image instead   
     flat_m= m.ravel() 
     indexs= np.where((flat_m > 0) & (flat_m < 1000))[0]
     for j in indexs:
         vals=np.append(vals, flat_m[j])
     return(np.average(vals))
 
-average_val=average_noise(Background)
 
-for j in range(0,1880):
-    for i in range(0,400):
-        if (i-200)**2 + (j-300)**2 <= 180**2:# and (i-200)**2 + (j-300)**2 >= 165**2 :
-            S2[i,j]=average_val
+def clean(m):                   #Removes digitisation noise
+    M=m
+    indexs=np.where( m > 60000)
+    row_index=indexs[0]
+    column_index=indexs[1]
+    for i, j in zip(row_index, column_index):
+        M[i,j]=0
+    return M  
+  
+def flat_noise(m):              #m is a 2D matrix.
+    M=clean(m) 
+    z=M[0:100,0:100] 
+    z=z.ravel()
+    average=np.average(z)
+    shape=np.zeros((400,1880))
+    for j in range(0,1880):
+        for i in range(0,400):
+            shape[i,j]=average
+    return shape
 
-#circle 2
-for j in range(0,1880):
-    for i in range(0,400):
-        if (i-200)**2 + (j-760)**2 <= 180**2:# and (i-200)**2 + (j-760)**2 >= 165**2 :
-            S2[i,j]=average_val           
-
-#circle 3
-for j in range(0,1880):
-    for i in range(0,400):
-        if (i-200)**2 + (j-1200)**2 <= 180**2:# and (i-200)**2 + (j-1200)**2 >= 165**2 :
-            S2[i,j]=average_val            
-
-#circle 4
-for j in range(0,1880):
-    for i in range(0,400):
-        if (i-200)**2 + (j-1650)**2 <= 180**2: # and (i-200)**2 + (j-1650)**2 >= 165**2 :
-            S2[i,j]=average_val
+Background= (clean(S1)-flat_noise(S2))
 
 plt.figure()
-plt.imshow(S1-S2)
+plt.imshow(Background)
 plt.colorbar(location= 'bottom')
 plt.clim(0,2000)
 plt.show() 
+
+#np.save('C:\Internship\Internship-\Image FIltering\Strip_2_clean.npy',Background)
