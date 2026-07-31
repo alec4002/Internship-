@@ -59,4 +59,10 @@ ft_4 = calculate_2dft(Circle_4)
 #plt.legend()
 #plt.show()
 
+line_out=np.abs(np.fft.ifftshift(np.fft.ifft2(ft_1*filter)))[200]
 
+plt.figure()
+plt.plot(np.arange(0,400),line_out)
+plt.show()
+
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher',np.abs(np.fft.ifftshift(np.fft.ifft2(ft_1*filter))))

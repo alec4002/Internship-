@@ -1,0 +1,62 @@
+import numpy as np
+from scipy import signal, datasets
+import matplotlib.pyplot as plt
+import skimage
+from scipy.special import expit
+
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher.npy')
+
+
+def makeGaussian(Amp,size, rank, std_x, std_y, theta, center=None):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+    """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
+
+    size is the length of a side of the square
+    fwhm is full-width-half-maximum, which
+    can be thought of as an effective radius.
+    """
+
+    x = np.arange(0, size, 1, float)
+    y = x[:,np.newaxis]
+
+    if center is None:
+        x0 = y0 = size // 2
+    else:
+        x0 = center[0]
+        y0 = center[1]
+
+
+    a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
+    b= -((np.cos(theta) * np.sin(theta))/(2*std_x**2))+((np.cos(theta) * np.sin(theta))/(2*std_y**2))   
+    c= ((np.sin(theta))**2/(2*std_x**2))+((np.cos(theta))**2/(2*std_y**2))
+
+    return (Amp*np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
+
+
+line_out_backlighter=Backlighter[200]
+#print(np.max(line_out_backlighter)/2)
+#hm=int(np.max(line_out_backlighter)/2) 
+#print(np.where(line_out_backlighter == 712.0616802872332))
+std_x= ((91)/(2*((2*np.log(2))**(0.5))))
+
+gauss=makeGaussian(np.max(Backlighter), 400, 1.25, std_x, 50, -np.pi/4, center=(200,200))
+line_out_gauss=gauss[200]
+
+plt.figure()
+plt.subplot(2,2,1)
+plt.imshow(Backlighter/(np.max(Backlighter)))
+plt.title('Backlighter')
+plt.colorbar()
+
+plt.subplot(2,2,2)
+plt.imshow(gauss)
+plt.title('Super Gaussian')
+plt.colorbar()
+
+plt.subplot(2,2,3)
+plt.plot(np.arange(0,400), line_out_backlighter)
+
+plt.subplot(2,2,4)
+plt.plot(np.arange(0,400), line_out_gauss)
+
+plt.show()
+
