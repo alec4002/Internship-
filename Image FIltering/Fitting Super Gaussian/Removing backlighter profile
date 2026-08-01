@@ -1,0 +1,43 @@
+import numpy as np
+from scipy import signal, datasets
+import matplotlib.pyplot as plt
+import skimage
+
+Backlighter_1=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
+Backlighter_2=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher_fit.npy')
+Strip_image=np.load('C:\Internship\Internship-\Image FIltering\Strip_2_clean.npy')
+
+Circle_1=Strip_image[0:400,100:500]
+Circle_2=Strip_image[0:400,560:960]
+
+Clean_Circle_1= Circle_1- Backlighter_1
+Clean_Circle_2= Circle_2- Backlighter_2
+Av_Signal= (Clean_Circle_1 + Clean_Circle_2)/2
+Av_noise= (Clean_Circle_1 - Clean_Circle_2)
+
+plt.figure()
+plt.subplot(2,2,1)
+plt.imshow(Clean_Circle_1)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+plt.set_cmap('gray')
+
+plt.subplot(2,2,2)
+plt.imshow(Clean_Circle_2)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+plt.set_cmap('gray')
+
+plt.subplot(2,2,3)
+plt.imshow(Av_Signal)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+plt.set_cmap('gray')
+
+plt.subplot(2,2,4)
+plt.imshow(Av_noise)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+plt.set_cmap('gray')
+
+plt.show()

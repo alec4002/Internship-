@@ -3,26 +3,24 @@ from scipy import signal, datasets
 import matplotlib.pyplot as plt
 import skimage
 from scipy.special import expit
+from scipy.optimize import curve_fit
+from scipy.stats import chisquare
 
-Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher.npy')
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher.npy')
 
 
-def makeGaussian(Amp,size, rank, std_x, std_y, theta, center=None):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
     """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
-
+                                                                    #M is  Nx2 matrix where N is the no of data 
     size is the length of a side of the square
     fwhm is full-width-half-maximum, which
     can be thought of as an effective radius.
     """
 
-    x = np.arange(0, size, 1, float)
-    y = x[:,np.newaxis]
+    x, y= M
 
-    if center is None:
-        x0 = y0 = size // 2
-    else:
-        x0 = center[0]
-        y0 = center[1]
+    x0 = centre
+    y0 = centre
 
 
     a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
@@ -32,31 +30,69 @@ def makeGaussian(Amp,size, rank, std_x, std_y, theta, center=None):    #this cod
     return (Amp*np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
 
 
-line_out_backlighter=Backlighter[200]
-#print(np.max(line_out_backlighter)/2)
-#hm=int(np.max(line_out_backlighter)/2) 
-#print(np.where(line_out_backlighter == 712.0616802872332))
-std_x= ((91)/(2*((2*np.log(2))**(0.5))))
+#dimensions of space
+x, y = np.arange(0, 400), np.arange(0, 400)
+X, Y = np.meshgrid(x, y)
 
-gauss=makeGaussian(np.max(Backlighter), 400, 1.25, std_x, 50, -np.pi/4, center=(200,200))
-line_out_gauss=gauss[200]
+xdata = np.vstack((X.ravel(), Y.ravel()))
+
+#turning space, data into 1D arrays so curve fit can work
+ydata= Backlighter.ravel()
+
+#initial guesses; may have issues with the centre
+p0=([1400,1,100,100,0,100])
+
+#Getting params 
+popt, pcov = curve_fit(makeGaussian, xdata, ydata, p0)
+
+#getting the optimised values
+Amp=popt[0]
+rank=popt[1]
+std_x=popt[2]
+std_y=popt[3]
+theta=popt[4]
+centre=popt[5]
+
+#getting the errors
+errors=np.array([])
+for i in range(0,len(pcov)):
+    errors=np.append(errors, pcov[i,i]**(0.5))
+
+#getting fit
+fit=makeGaussian((X,Y), Amp, rank,std_x,std_y,theta,centre)
+
+line_out_backlighter_x=Backlighter[200]
+line_out_backlighter_y=Backlighter[:,200]
+#std_x= ((200)/(2*((2*np.log(2))**(0.5))))
+#std_y= ((200)/(2*((2*np.log(2))**(0.5))))
+
+
+line_out_gauss_x=fit[200]
+line_out_gauss_y=fit[:,200]
 
 plt.figure()
-plt.subplot(2,2,1)
-plt.imshow(Backlighter/(np.max(Backlighter)))
+plt.subplot(3,2,1)
+plt.imshow(Backlighter)
 plt.title('Backlighter')
 plt.colorbar()
 
-plt.subplot(2,2,2)
-plt.imshow(gauss)
-plt.title('Super Gaussian')
+plt.subplot(3,2,2)
+plt.imshow(fit)
+plt.title('fit')
 plt.colorbar()
 
-plt.subplot(2,2,3)
-plt.plot(np.arange(0,400), line_out_backlighter)
+plt.subplot(3,2,3)
+plt.plot(np.arange(0,400), line_out_backlighter_x)
 
-plt.subplot(2,2,4)
-plt.plot(np.arange(0,400), line_out_gauss)
+plt.subplot(3,2,4)
+plt.plot(np.arange(0,400), line_out_gauss_x)
+
+plt.subplot(3,2,5)
+plt.plot(np.arange(0,400), line_out_backlighter_y)
+
+plt.subplot(3,2,6)
+plt.plot(np.arange(0,400), line_out_gauss_y)
 
 plt.show()
 
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher_fit.npy', fit)
