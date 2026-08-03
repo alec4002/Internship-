@@ -12,7 +12,7 @@ Circle_2=Strip_image[0:400,560:960]
 
 Clean_Circle_1= Circle_1- Backlighter_1
 Clean_Circle_2= Circle_2- Backlighter_2
-Av_Signal= (Clean_Circle_1 + Clean_Circle_2)/2
+Av_Signal= (Clean_Circle_1 + Clean_Circle_2)
 Av_noise= (Clean_Circle_1 - Clean_Circle_2)
 
 plt.figure()
@@ -31,7 +31,7 @@ plt.set_cmap('gray')
 plt.subplot(2,2,3)
 plt.imshow(Av_Signal)
 plt.colorbar(location='bottom')
-plt.clim(0,500)
+plt.clim(0,1000)
 plt.set_cmap('gray')
 
 plt.subplot(2,2,4)

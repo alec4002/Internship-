@@ -1,0 +1,38 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+import scipy 
+from scipy import integrate
+
+#All the equations are taken from Smalyuk 2001. I think the equations should be applicable 
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+def M_dig(dx, fx, fy):               #MTF digitisation. Note, I want in term of k. I think fx == kx, fy == ky in this case but will just check before implimentation.
+    p=(np.sin(np.pi * dx *fx))/(np.pi * dx *fx)
+    q=(np.sin(np.pi * dx *fy))/(np.pi * dx *fy)
+    return(p*q)
+
+def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):        #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
+    p=alpha_1*np.exp(-(sigma_1 * f)**2)
+    q=alpha_2*np.exp(-(sigma_2 * f)**2)
+    return(p+q)
+
+def circ(x,y):
+    rho= (x**2 + y**2)**(0.5)
+    return(rho)
+
+def f(x_,y_,wavelength,x,y,z_1,z_2):
+    p=circ(x_,y_)
+    q=np.exp((-1j*np.pi/wavelength) * (x_**2 + y_**2)*(1/z_1 + 1/z_2))
+    r=np.exp((-2j*np.pi/wavelength*z_2) * (x *x_ + y* y_)) 
+
+    return p*q*r
+
+def P_ph(wavelength,x,y,z_1,z_2):                            #PSF of the pinholes. Will lake fft to get the MTF. What the hell do i integrate over? Area of the pinhole camera probably?
+    return (1/(wavelength**2 * z_1**2 * z_2**2))*np.abs(integrate.dblquad(f,-1,1,-1,1, args=(wavelength,x,y,z_1,z_2)))**2
+
+def M_ph(wavelength,x,y,z_1,z_2):                            #MTF of pineholes 
+    return calculate_2dft(wavelength,x,y,z_1,z_2)   
