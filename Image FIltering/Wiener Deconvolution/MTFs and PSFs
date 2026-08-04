@@ -10,12 +10,12 @@ def calculate_2dft(input):
     ft = np.fft.fft2(ft)
     return np.fft.fftshift(ft)
 
-def M_dig(dx, fx, fy):               #MTF digitisation. Note, I want in term of k. I think fx == kx, fy == ky in this case but will just check before implimentation.
+def M_dig(dx, fx, fy):                                       #MTF digitisation. Note, I want in term of k. I think fx == kx, fy == ky in this case but will just check before implimentation.
     p=(np.sin(np.pi * dx *fx))/(np.pi * dx *fx)
     q=(np.sin(np.pi * dx *fy))/(np.pi * dx *fy)
     return(p*q)
 
-def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):        #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
+def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):                 #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
     p=alpha_1*np.exp(-(sigma_1 * f)**2)
     q=alpha_2*np.exp(-(sigma_2 * f)**2)
     return(p+q)

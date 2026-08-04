@@ -15,6 +15,10 @@ Clean_Circle_2= Circle_2- Backlighter_2
 Av_Signal= (Clean_Circle_1 + Clean_Circle_2)
 Av_noise= (Clean_Circle_1 - Clean_Circle_2)
 
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Signal', Av_Signal)
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Noise', Av_noise)
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Measured',Circle_1)
+
 plt.figure()
 plt.subplot(2,2,1)
 plt.imshow(Clean_Circle_1)

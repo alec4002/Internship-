@@ -4,56 +4,27 @@ import matplotlib.colors as colors
 import scipy 
 from scipy import integrate
 
-
-x=np.arange(0,400)
-y=np.arange(0,400)
-Sampling_freq_x=np.sort(np.fft.fftfreq(400, 9e-6))
-Sampling_freq_y=np.sort(np.fft.fftfreq(400, 9e-6))
-
-#making the k space
-K_tot=np.empty([400,400])
-
-for i in range(0,len(Sampling_freq_x)):
-    q=np.array([])
-    for j in range(0,len(Sampling_freq_y)):
-        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
-        q=np.append(q,p)
-    K_tot[i]=q
-
-#functions required
 def calculate_2dft(input):
     ft = np.fft.ifftshift(input)
     ft = np.fft.fft2(ft)
     return np.fft.fftshift(ft)
 
-def M_dig(dx, fx, fy):               #MTF digitisation. Note, I want in term of k. I think fx == kx, fy == ky in this case but will just check before implimentation.
-    p=(np.sin(np.pi * dx *fx))/(np.pi * dx *fx)
-    q=(np.sin(np.pi * dx *fy))/(np.pi * dx *fy)
-    return(p*q)
+#image data
+Signal=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Signal.npy') 
+Noise=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Noise.npy') 
+Measured=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Measured.npy') 
 
-def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):        #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
-    p=alpha_1*np.exp(-(sigma_1 * f)**2)
-    q=alpha_2*np.exp(-(sigma_2 * f)**2)
-    return(p+q)
+#Fourier Transforms
+Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Mtf.npy')
+Signal_ft=calculate_2dft(Signal)
+Noise_ft=calculate_2dft(Noise)
+Measured_ft=calculate_2dft(Measured)
 
-def circ(x,y):
-    rho= (x**2 + y**2)**(0.5)
-    return(rho)
+Mtf= Mtf
 
-def f(x_,y_,wavelength,x,y,z_1,z_2):
-    p=circ(x_,y_)
-    q=np.exp((-1j*np.pi/wavelength) * (x_**2 + y_**2)*(1/z_1 + 1/z_2))
-    r=np.exp((-2j*np.pi/wavelength*z_2) * (x *x_ + y* y_)) 
+Restored= np.divide(Measured_ft, Mtf) * np.divide((np.abs(Signal_ft))**2, ((np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2))
 
-    return p*q*r
-
-def P_ph(wavelength,x,y,z_1,z_2):                            #PSF of the pinholes. Will lake fft to get the MTF. What the hell do i integrate over? Area of the pinhole camera probably?
-    return (1/(wavelength**2 * z_1**2 * z_2**2))*np.abs(integrate.dblquad(f,-1,1,-1,1, args=(wavelength,x,y,z_1,z_2)))**2
-
-def M_ph(wavelength,x,y,z_1,z_2):                            #MTF of pineholes 
-    return calculate_2dft(P_ph(wavelength,x,y,z_1,z_2))   
-
-
-#Mtf=M_dig(dx=20e-6, fx=Sampling_freq_x, fy=Sampling_freq_y) * M_fc(f=K_tot, alpha_1=0.89, alpha_2=0.22, sigma_1=105.4e-6, sigma_2=2356.8e-6)# * store 
-
-print(M_ph(395e-9,1,1,1,1))
+plt.figure()
+plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
+plt.set_cmap('gray')
+plt.show()
