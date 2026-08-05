@@ -19,6 +19,9 @@ Av_noise= (Clean_Circle_1 - Clean_Circle_2)
 #np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Noise', Av_noise)
 #np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Measured',Circle_1)
 
+np.save('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_1.npy', Clean_Circle_1)
+np.save('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2.npy', Clean_Circle_2)
+
 plt.figure()
 plt.subplot(2,2,1)
 plt.imshow(Clean_Circle_1)

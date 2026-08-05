@@ -1,0 +1,34 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import numpy as np
+from scipy import signal, datasets, ndimage
+
+
+Circle_1=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_1.npy')
+Circle_2=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2.npy')
+
+Roi= Circle_2[245:285,175:235]
+
+corr = signal.correlate2d(Circle_1, Roi, boundary='symm', mode='same')
+y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
+
+#Drawing rectangle
+#Circle_2[245:285,175]=500
+#Circle_2[245:285,235]=500
+#Circle_2[245,175:235]=500
+#Circle_2[285,175:235]=500
+
+print(x,y)
+
+plt.figure()
+plt.subplot(1,2,1)
+plt.imshow(Circle_1)
+plt.plot(x,y, 'ro')
+plt.clim(0,500)
+
+plt.subplot(1,2,2)
+plt.imshow(Circle_2)
+plt.plot(205,265, 'ro')
+plt.clim(0,500)
+
+plt.show()
