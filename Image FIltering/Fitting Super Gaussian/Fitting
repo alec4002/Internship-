@@ -93,6 +93,7 @@ plt.plot(np.arange(0,400), line_out_backlighter_y)
 plt.subplot(3,2,6)
 plt.plot(np.arange(0,400), line_out_gauss_y)
 
+plt.savefig('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Plot showing fit.png',bbox_inches='tight')
 plt.show()
 
-np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher_fit.npy', fit)
+#np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher_fit.npy', fit)

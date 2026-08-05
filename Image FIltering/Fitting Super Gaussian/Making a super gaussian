@@ -30,5 +30,8 @@ def makeGaussian(size, rank, std_x, std_y, theta, center=None):    #this code co
     return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
 
 gauss=makeGaussian(100, 2, 15, 10, np.pi/4, center=(50,50))
-line_out=gauss[50]
+
+plt.figure()
+plt.imshow(gauss)
+plt.show()
 
