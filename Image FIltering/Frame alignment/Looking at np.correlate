@@ -10,7 +10,7 @@ Circle_3=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Stri
 
 Roi= Circle_2[240:280,185:245]
 
-corr = signal.correlate2d(Circle_3, Roi, boundary='symm', mode='same')
+corr = signal.correlate2d(Circle_1, Roi, boundary='symm', mode='same')
 y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
 
 #Drawing rectangle
@@ -28,20 +28,20 @@ print(x,y)
 
 plt.figure()
 plt.subplot(1,2,1)
-plt.imshow(Circle_2)
+plt.imshow(Circle_1)
 plt.clim(0,500)
 plt.set_cmap('gray')
-plt.plot(215,260, 'ro')
+plt.plot(x,y, 'ro')
 plt.title('Circle 1')
 plt.legend()
 plt.colorbar(location='bottom')
 
 plt.subplot(1,2,2)
-plt.imshow(Circle_3)
-plt.plot(x,y, 'ro')
+plt.imshow(Circle_2)
+plt.plot(215,260, 'ro')
 plt.clim(0,500)
 plt.set_cmap('gray')
-plt.title('Circle 3')
+plt.title('Circle 2')
 plt.legend()
 plt.colorbar(location='bottom')
 
