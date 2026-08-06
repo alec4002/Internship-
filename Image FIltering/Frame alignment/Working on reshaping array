@@ -27,6 +27,7 @@ New_shape=shape[45:445,60:460]
 #shape[50:450,450]=400
 #shape[50,50:450]=400
 #shape[450,50:450]=400
+
 np.save('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2_new.npy', New_shape)
 
 plt.figure()

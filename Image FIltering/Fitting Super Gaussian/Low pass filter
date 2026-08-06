@@ -42,11 +42,11 @@ ft_4 = calculate_2dft(Circle_4)
 
 plt.figure()
 plt.subplot(1,2,1)
-plt.imshow(np.log(np.abs(ft_2*filter)))
+plt.imshow(np.log(np.abs(ft_3*filter)))
 plt.title('Circle_2')
 
 plt.subplot(1,2,2)
-plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(ft_2*filter))))
+plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(ft_3*filter))))
 plt.title('Circle_2')
 
 #plt.subplot(2,2,3)
@@ -67,5 +67,5 @@ plt.show()
 #plt.plot(np.arange(0,400),line_out)
 #plt.show()
 
-np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_new_backligher',np.abs(np.fft.ifftshift(np.fft.ifft2(ft_2*filter))))
-np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_new',Circle_2)
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3_backlighter',np.abs(np.fft.ifftshift(np.fft.ifft2(ft_3*filter))))
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3',Circle_3)
