@@ -19,14 +19,14 @@ Circle_3=image[0:400,1000:1400]
 Circle_4=image[0:400,1450:1850]
 
 #the following set of code produces a hann filter of dim nxn to use 
-n=30 #length of Hann axis   #Set to 15 for my analysis 
+n=15 #length of Hann axis   #Set to 15 for my analysis 
 win = skimage.filters.window('hann', (n, n))
-x = 200 #x is the centre point, symmetric so just need one number
 filter=np.empty((400,400))
+y,x = 200,200                             #x,y is the centre point
 
-for j in range(int(x-n/2),int(x+n/2)):
+for j in range(int(y-n/2),int(y+n/2)):
     for i in range(int(x-n/2),int(x+n/2)):
-            filter[i,j]=win[i-int((x-n/2)),j-int((x-n/2))]
+            filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
 
 
 #fourier transfer of the images 
@@ -35,19 +35,19 @@ ft_2 = calculate_2dft(Circle_2)
 ft_3 = calculate_2dft(Circle_3)  
 ft_4 = calculate_2dft(Circle_4)   
 
-line_out=np.abs(np.fft.ifftshift(np.fft.ifft2(ft_1*filter)))[200]
+#line_out=np.abs(np.fft.ifftshift(np.fft.ifft2(ft_1*filter)))[200]
 #plt.imshow(np.log(np.abs(ft))*(filter))
 
 #this is just a nice plot of the diff backlighter profiles seen by each image
 
 plt.figure()
 plt.subplot(1,2,1)
-plt.imshow(np.log(np.abs(ft_1*filter)))
-plt.title('Circle_1')
+plt.imshow(np.log(np.abs(ft_2*filter)))
+plt.title('Circle_2')
 
 plt.subplot(1,2,2)
-plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(ft_1*filter))))
-plt.title('Circle_1')
+plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(ft_2*filter))))
+plt.title('Circle_2')
 
 #plt.subplot(2,2,3)
 #plt.plot(np.arange(0,400), line_out)
@@ -67,4 +67,5 @@ plt.show()
 #plt.plot(np.arange(0,400),line_out)
 #plt.show()
 
-#np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_backligher',np.abs(np.fft.ifftshift(np.fft.ifft2(ft_2*filter))))
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_new_backligher',np.abs(np.fft.ifftshift(np.fft.ifft2(ft_2*filter))))
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_2_new',Circle_2)
