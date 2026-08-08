@@ -6,7 +6,7 @@ from scipy.special import expit
 from scipy.optimize import curve_fit
 from scipy.stats import chisquare
 
-Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3_backlighter.npy')
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_4_backlighter.npy')
 
 
 def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
@@ -96,4 +96,4 @@ plt.plot(np.arange(0,400), line_out_gauss_y)
 #plt.savefig('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Plot showing fit.png',bbox_inches='tight')
 plt.show()
 
-np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3_new_backligher_fit.npy', fit)
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_4_new_backligher_fit.npy', fit)

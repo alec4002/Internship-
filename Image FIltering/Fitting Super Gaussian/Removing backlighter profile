@@ -3,11 +3,11 @@ from scipy import signal, datasets
 import matplotlib.pyplot as plt
 import skimage
 
-Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3_new_backligher_fit.npy')
-Circle=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3.npy')
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_4_new_backligher_fit.npy')
+Circle=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_4.npy')
 
 Clean_Circle= Circle-Backlighter
-np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_3_clean', Clean_Circle)
+np.save('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_4_clean', Clean_Circle)
 
 #np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Signal', Av_Signal)
 #np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Noise', Av_noise)

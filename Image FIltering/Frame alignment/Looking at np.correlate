@@ -6,60 +6,59 @@ from scipy import signal, datasets, ndimage
 
 Circle_1=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_1.npy')
 Circle_2=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2_new.npy')
-Circle_3=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Strip_2_circle_3_clean.npy')
+Circle_3=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_3_new.npy')
+Circle_4=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_4_new.npy') 
 
-Roi= Circle_2[240:280,185:245]
+Roi= Circle_3[230:270,110:170]
 
-corr = signal.correlate2d(Circle_1, Roi, boundary='symm', mode='same')
+corr = signal.correlate2d(Circle_4, Roi, boundary='symm', mode='same')
 y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
-
-#Drawing rectangle
-#Circle_2[245:285,175]=500
-#Circle_2[245:285,235]=500
-#Circle_2[245,175:235]=500
-#Circle_2[285,175:235]=500
-
-#Circle_2_new[250:290,185]=500
-#Circle_2_new[250:290,245]=500
-#Circle_2_new[250,185:245]=500
-#Circle_2_new[290,185:245]=500
-
 print(x,y)
 
+#Drawing rectangle
+#Circle_2[210:250,130]=500
+#Circle_2[210:250,190]=500
+#Circle_2[210,130:190]=500
+#Circle_2[250,130:190]=500
+
 plt.figure()
-plt.subplot(1,2,1)
+plt.subplot(1,4,1)
 plt.imshow(Circle_1)
 plt.clim(0,500)
 plt.set_cmap('gray')
-plt.plot(x,y, 'ro')
+#plt.plot(x,y, 'ro')
 plt.title('Circle 1')
 plt.legend()
 plt.colorbar(location='bottom')
 
-plt.subplot(1,2,2)
+plt.subplot(1,4,2)
 plt.imshow(Circle_2)
-plt.plot(215,260, 'ro')
+#plt.plot(160,230, 'ro')
 plt.clim(0,500)
 plt.set_cmap('gray')
 plt.title('Circle 2')
 plt.legend()
 plt.colorbar(location='bottom')
 
-#plt.subplot(1,3,3)
-#plt.imshow(Circle_3)
-#plt.clim(0,1000)
-#plt.set_cmap('gray')
-#plt.title('Circle 3')
-#plt.legend()
-#plt.colorbar(location='bottom')
+plt.subplot(1,4,3)
+plt.imshow(Circle_3)
+plt.clim(0,500)
+plt.set_cmap('gray')
+plt.plot(140,250, 'ro')
+plt.title('Circle 3')
+plt.legend()
+plt.colorbar(location='bottom')
 
-#plt.subplot(2,2,4)
-#plt.imshow(Circle_1-Circle_2_new)
-#plt.clim(0,500)
-#plt.set_cmap('gray')
-#plt.title('Noise')
-#plt.legend()
-#plt.colorbar(location='bottom')
+plt.subplot(1,4,4)
+plt.imshow(Circle_4)
+plt.clim(0,500)
+plt.set_cmap('gray')
+plt.plot(x,y, 'ro')
+plt.title('Circle 4')
+plt.legend()
+plt.colorbar(location='bottom')
 
-#plt.savefig('C:\Internship\Internship-\Image FIltering\Frame alignment\Correlated images.png', bbox_inches='tight')
+plt.savefig('C:\Internship\Internship-\Image FIltering\Frame alignment\Correlated images.png', bbox_inches='tight')
 plt.show()
+
+
