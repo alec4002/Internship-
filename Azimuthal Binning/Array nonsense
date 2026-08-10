@@ -1,8 +1,8 @@
 import numpy as np 
 
-p=np.array([[1,2,3],[1,5,6],[1,8,9]])
+p=np.array([[2,4,6],[8,10,12]])
+q=np.array([[1,2,3],[4,5,6]])
 
-
-print(np.where(p == 1))
+print((p/q))
 
 #np.where gives an array of indexs; first is the row index, second is the coloumn index. 

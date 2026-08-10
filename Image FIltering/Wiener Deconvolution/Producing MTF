@@ -4,6 +4,7 @@ import matplotlib.colors as colors
 import scipy 
 from scipy import integrate
 
+mtf_pinhole=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\pinhole_mft.npy')
 
 x=np.arange(0,400)
 y=np.arange(0,400)
@@ -31,8 +32,8 @@ def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):                    #MTF framing cam
     q=alpha_2*np.exp(-(sigma_2 * f)**2)
     return(p+q)
 
-
-
-Mtf=M_dig(dx=20, fx=Sampling_freq_x, fy=Sampling_freq_y) # * M_ph(400,5,395,3e4,36e4) #* M_fc(f=K_tot, alpha_1=0.89, alpha_2=0.22, sigma_1=105.4, sigma_2=2356.8) * M_ph(400,5,395,3e4,36e4)  Framing camera is just all zero. 
-
-print(Mtf)
+mtf_tot=(M_fc(K_tot, 0.89, 0.22, 105.4e-6, 2356.8e-6))  * mtf_pinhole 
+plt.figure()
+plt.imshow(mtf_tot)
+plt.show()
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\mft_tot.npy', mtf_tot)

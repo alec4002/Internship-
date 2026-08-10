@@ -7,4 +7,17 @@ mat_contents = sio.loadmat('C:\Internship\Internship-\Image FIltering\Wiener Dec
 
 #print(sorted(mat_contents.keys()))
 
-print(np.max(mat_contents['pinhole_mtf_norm']))
+mtf_x=mat_contents['pinhole_mtf_norm'][0]
+mtf_y=mat_contents['pinhole_mtf_norm'][0]
+
+#makinf mtf space
+mtf_tot=np.empty([400,400])
+
+for i in range(0,len(mtf_y)):
+    q=np.array([])
+    for j in range(0,len(mtf_x)):
+        p=(mtf_x[j]**2 + mtf_y[i]**2)**(1/2)
+        q=np.append(q,p)
+    mtf_tot[i]=q
+
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\pinhole_mft.npy', mtf_tot)

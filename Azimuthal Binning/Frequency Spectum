@@ -85,7 +85,7 @@ def Bin(m,p):   #m is matrix, p is the number of bins
 
             for j in indexs: 
                 Temp_store=np.append(Temp_store, m[:,1][j])
-            amps=np.append(amps, np.sum(Temp_store))
+            amps=np.append(amps, np.average(Temp_store))
 
         else: 
             #boolian= np.any(Test < m <= bins[i+1], axis=1)
@@ -93,7 +93,7 @@ def Bin(m,p):   #m is matrix, p is the number of bins
 
             for j in indexs: 
                 Temp_store=np.append(Temp_store, m[:,1][j])
-            amps=np.append(amps, np.sum(Temp_store))
+            amps=np.append(amps, np.average(Temp_store))
 
 
     #bins=np.append(bins, (bins[-1]+(np.max((m[:,0])))/p))

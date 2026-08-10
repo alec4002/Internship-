@@ -9,22 +9,52 @@ def calculate_2dft(input):
     ft = np.fft.fft2(ft)
     return np.fft.fftshift(ft)
 
+
+def clean(m):                   #Removes digitisation noise
+    M=m
+    indexs=np.where( m < 0)
+    row_index=indexs[0]
+    column_index=indexs[1]
+    for i, j in zip(row_index, column_index):
+        M[i,j]=0
+    return M 
+
 #image data
-Signal=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Signal.npy') 
-Noise=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Noise.npy') 
-Measured=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ Measured.npy') 
+Circle_1=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_1.npy'))
+Circle_2=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_2_new.npy'))
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
+Signal=Circle_1 + Circle_2
+Noise= Circle_1 - Circle_2
+Measured=Circle_1
 
 #Fourier Transforms
-Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Mtf.npy')
+Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\mft_tot.npy')
 Signal_ft=calculate_2dft(Signal)
 Noise_ft=calculate_2dft(Noise)
-Measured_ft=calculate_2dft(Measured)
+Measured_ft= calculate_2dft(Circle_1)
 
-Mtf= Mtf
+filter_= np.divide( (np.abs(Signal_ft))**2, (np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2)
+Restored= ((Measured_ft/Mtf) * filter_)
+Restored=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
 
-Restored= np.divide(Measured_ft, Mtf) * np.divide((np.abs(Signal_ft))**2, ((np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2))
+Image=np.log(Backlighter)/Restored
 
 plt.figure()
-plt.imshow(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
+plt.imshow(Image)
 plt.set_cmap('gray')
+plt.colorbar(location='bottom')
+plt.clim(-5,5)
 plt.show()
+
+#plt.figure()
+#plt.subplot(1,2,1)
+#plt.imshow(np.log(np.abs(Restored)))
+#plt.colorbar(location='bottom')
+#plt.set_cmap('gray')
+
+#plt.subplot(1,2,2)
+#plt.imshow((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
+#plt.set_cmap('gray')
+#plt.clim(0,50)
+#plt.colorbar(location='bottom')
+#plt.show()
