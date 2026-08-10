@@ -27,6 +27,9 @@ Signal=Circle_1 + Circle_2
 Noise= Circle_1 - Circle_2
 Measured=Circle_1
 
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ signal.npy', Signal)
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ noise.npy',Noise)
+
 #Fourier Transforms
 Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\mft_tot.npy')
 Signal_ft=calculate_2dft(Signal)

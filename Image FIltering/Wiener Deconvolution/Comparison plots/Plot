@@ -1,0 +1,15 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+Counts_signal= np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Counts_signal.npy')
+Counts_noise= np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Counts_noise.npy')
+Bins_signal= np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Bins_signal.npy')
+Bins_noise=  np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Bins_noise.npy')
+
+plt.figure()
+plt.stairs(Counts_signal, Bins_signal, label='Signal' )
+plt.stairs(Counts_noise, Bins_noise, label='Noise' ) 
+plt.xlabel('Frequency')
+plt.ylabel('Fourier amplitude')
+plt.legend()
+plt.show()

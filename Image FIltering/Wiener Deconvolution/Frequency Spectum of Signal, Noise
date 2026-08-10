@@ -1,0 +1,105 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+# Read and process image
+signal = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ signal.npy')
+noise = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ noise.npy')
+#image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+
+#create the range of k_x, k_y values
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(signal[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(signal[0,:])))
+
+
+#making the k space
+K_tot=np.empty([400,400])
+
+for i in range(0,len(Sampling_freq_x)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_y)):
+        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
+
+#fourier transfer of the image 
+ft_signal =np.abs(calculate_2dft(signal))   
+
+ft_noise = np.abs(calculate_2dft(noise))   
+
+
+Tot=np.empty([400**2,2])
+
+flat_k =K_tot.ravel() 
+flat_ft_signal= ft_signal.ravel()
+flat_ft_noise= ft_noise.ravel()
+
+#storing corresponging k values and fourier amplitudes
+for i in range(0,400**2):
+    S=np.array([flat_k[i], flat_ft_noise[i]])
+    Tot[i]=S
+
+#sorting the matrix in order of increasing k values
+Tot=np.sort(Tot, axis=0)
+Tot=np.abs(Tot)
+
+#sorting k val duplicates. Note than m must be Nx2 dimensional
+def Sort(m):
+    amps=np.array([])
+    k_vals=np.unique(m[:,0]) 
+
+    for i in range(0,len(k_vals)):
+        Temp_store=np.array([])
+        Test=k_vals[i]
+        boolian=np.any(m == Test, axis=1)
+        indexs= np.where(boolian == True)[0]
+
+        for i in indexs: 
+            Temp_store=np.append(Temp_store, m[:,1][i])
+        amps=np.append(amps, np.sum(Temp_store))
+
+    return(k_vals,amps)            
+    
+k_vals, Amps = (Sort(Tot))
+Raw_sorted=np.empty([len(k_vals),2])
+
+for i in range(0,len(k_vals)):
+    S=np.array([k_vals[i], Amps[i]])
+    Raw_sorted[i]=S
+
+def Bin(m,p):   #m is matrix, p is the number of bins
+    amps=np.array([])      
+    bins=np.arange(0,np.max(m[:,0]),((np.max(m[:,0])))/p)
+
+    for i in range(0, len(bins)-1):
+        Test=bins[i]   
+        Temp_store=np.array([])
+        if Test == 0:
+            boolian= np.any( m <= Test, axis=1)
+            indexs= np.where(boolian == True)[0]            
+
+            for j in indexs: 
+                Temp_store=np.append(Temp_store, m[:,1][j])
+            amps=np.append(amps, np.average(Temp_store))
+
+        else: 
+            #boolian= np.any(Test < m <= bins[i+1], axis=1)
+            indexs= np.where( (m[:,0] > Test)  &  (m[:,0] <= bins[i+1]))[0]     #check that this doesnt give repeat values 
+
+            for j in indexs: 
+                Temp_store=np.append(Temp_store, m[:,1][j])
+            amps=np.append(amps, np.average(Temp_store))
+
+
+    #bins=np.append(bins, (bins[-1]+(np.max((m[:,0])))/p))
+    return(amps, bins)
+
+counts, bins= Bin(Raw_sorted, 55)
+
+
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Counts_noise', counts )
+np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Bins_noise', bins)
