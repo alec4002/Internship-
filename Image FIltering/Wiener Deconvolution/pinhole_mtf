@@ -1,0 +1,10 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import scipy 
+import scipy.io as sio
+
+mat_contents = sio.loadmat('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\pinhole_mft_norm.mat', spmatrix=False)
+
+#print(sorted(mat_contents.keys()))
+
+print(np.max(mat_contents['pinhole_mtf_norm']))
