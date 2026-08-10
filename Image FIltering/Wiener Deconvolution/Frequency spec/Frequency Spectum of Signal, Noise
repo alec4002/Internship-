@@ -15,20 +15,22 @@ noise = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(signal[:,0])))
 Sampling_freq_y=np.sort(np.fft.fftfreq(len(signal[0,:])))
 
+Sampling_freq_y=np.flip(Sampling_freq_y)
 
 #making the k space
 K_tot=np.empty([400,400])
 
-for i in range(0,len(Sampling_freq_x)):
+
+for i in range(0,len(Sampling_freq_y)):
     q=np.array([])
-    for j in range(0,len(Sampling_freq_y)):
-        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+    for j in range(0,len(Sampling_freq_x)):
+        p=(Sampling_freq_y[i]**2 + Sampling_freq_x[j]**2)**(1/2)
         q=np.append(q,p)
     K_tot[i]=q
 
+
 #fourier transfer of the image 
 ft_signal =np.abs(calculate_2dft(signal))   
-
 ft_noise = np.abs(calculate_2dft(noise))   
 
 
@@ -60,7 +62,7 @@ def Sort(m):
 
         for i in indexs: 
             Temp_store=np.append(Temp_store, m[:,1][i])
-        amps=np.append(amps, np.sum(Temp_store))
+        amps=np.append(amps, np.average(Temp_store))
 
     return(k_vals,amps)            
     
@@ -84,7 +86,7 @@ def Bin(m,p):   #m is matrix, p is the number of bins
 
             for j in indexs: 
                 Temp_store=np.append(Temp_store, m[:,1][j])
-            amps=np.append(amps, np.average(Temp_store))
+            amps=np.append(amps, np.sum(Temp_store))
 
         else: 
             #boolian= np.any(Test < m <= bins[i+1], axis=1)
@@ -92,14 +94,17 @@ def Bin(m,p):   #m is matrix, p is the number of bins
 
             for j in indexs: 
                 Temp_store=np.append(Temp_store, m[:,1][j])
-            amps=np.append(amps, np.average(Temp_store))
+            amps=np.append(amps, np.sum(Temp_store))
 
 
     #bins=np.append(bins, (bins[-1]+(np.max((m[:,0])))/p))
     return(amps, bins)
 
-counts, bins= Bin(Raw_sorted, 55)
+counts, bins= Bin(Raw_sorted, 100)
 
+plt.figure()
+plt.stairs(counts, bins)
+plt.show()
 
 np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Counts_noise', counts )
 np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\Comparison plots\ Bins_noise', bins)
