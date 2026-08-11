@@ -1,0 +1,51 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+# Read and process image
+signal = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ signal.npy')
+noise = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ noise.npy')
+#image = image[:, :, :3].mean(axis=2)  # Convert to grayscale (THIS WAS WHAT I NEEDED!!!!)
+
+#create the range of k_x, k_y values
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(signal[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(signal[0,:])))
+
+Sampling_freq_y=np.flip(Sampling_freq_y)
+
+#making the k space
+K_tot=np.empty([400,400])
+
+
+for i in range(0,len(Sampling_freq_y)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_x)):
+        p=(Sampling_freq_y[i]**2 + Sampling_freq_x[j]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
+
+
+#fourier transfer of the image 
+ft_signal =np.abs(calculate_2dft(signal))   
+ft_noise = np.abs(calculate_2dft(noise))   
+
+
+Tot=np.empty([400**2,2])
+
+flat_k =K_tot.ravel() 
+flat_ft_signal= ft_signal.ravel()
+flat_ft_noise= ft_noise.ravel()
+
+#storing corresponging k values and fourier amplitudes
+for i in range(0,400**2):
+    S=np.array([flat_k[i], flat_ft_noise[i]])
+    Tot[i]=S
+
+#sorting the matrix in order of increasing k values
+Tot=np.sort(Tot, axis=0)
+
+print(Tot)

@@ -15,17 +15,4 @@ noise = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(signal[:,0])))
 Sampling_freq_y=np.sort(np.fft.fftfreq(len(signal[0,:])))
 
-Sampling_freq_y=np.flip(Sampling_freq_y)
-
-#making the k space
-K_tot=np.empty([400,400])
-
-
-for i in range(0,len(Sampling_freq_y)):
-    q=np.array([])
-    for j in range(0,len(Sampling_freq_x)):
-        p=(Sampling_freq_y[i]**2 + Sampling_freq_x[j]**2)**(1/2)
-        q=np.append(q,p)
-    K_tot[i]=q
-
-print(K_tot)
+print(np.arange(0,400), Sampling_freq_x)
