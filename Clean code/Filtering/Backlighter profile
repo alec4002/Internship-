@@ -1,0 +1,83 @@
+import numpy as np
+from scipy import signal, datasets
+import matplotlib.pyplot as plt
+import skimage
+from scipy.special import expit
+from scipy.optimize import curve_fit
+from scipy.stats import chisquare
+
+#Read image
+image = np.load('')
+
+def calculate_2dft(input):          #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+ft= calculate_2dft(image)
+
+#the following set of code produces a hann filter of dim nxn to use 
+n=15 #length of Hann axis, set to 15 for my analysis 
+win = skimage.filters.window('hann', (n, n))
+filter=np.empty((400,400))
+y,x = 200,200                             #x,y is the centre point
+
+for j in range(int(y-n/2),int(y+n/2)):                              #In orde to appy a Hann window to the area we want, we have tp create it on a smaller grid, before moving it on to the correct sized grid.
+    for i in range(int(x-n/2),int(x+n/2)):
+            filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
+
+Backlighter= np.abs(np.fft.ifftshift(np.fft.ifft2(ft*filter)))      #Backlighter profile for this shot
+
+def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+    """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
+                                                                    #M is  Nx2 matrix where N is the no of data 
+    size is the length of a side of the square
+    fwhm is full-width-half-maximum, which
+    can be thought of as an effective radius.
+    """
+
+    x, y= M
+
+    x0 = centre
+    y0 = centre
+
+
+    a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
+    b= -((np.cos(theta) * np.sin(theta))/(2*std_x**2))+((np.cos(theta) * np.sin(theta))/(2*std_y**2))   
+    c= ((np.sin(theta))**2/(2*std_x**2))+((np.cos(theta))**2/(2*std_y**2))
+
+    return (Amp*np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
+
+
+#dimensions of space
+x, y = np.arange(0, 400), np.arange(0, 400)
+X, Y = np.meshgrid(x, y)
+
+xdata = np.vstack((X.ravel(), Y.ravel()))
+
+#turning space, data into 1D arrays so curve fit can work
+ydata= Backlighter.ravel()
+
+#initial guesses; may have issues with the centre
+p0=([np.max(ydata),1,100,100,0,100])
+
+#Getting params 
+popt, pcov = curve_fit(makeGaussian, xdata, ydata, p0)
+
+#getting the optimised values
+Amp=popt[0]
+rank=popt[1]
+std_x=popt[2]
+std_y=popt[3]
+theta=popt[4]
+centre=popt[5]
+
+#getting the errors
+errors=np.array([])
+for i in range(0,len(pcov)):
+    errors=np.append(errors, pcov[i,i]**(0.5))
+
+#getting fit
+fit=makeGaussian((X,Y), Amp, rank,std_x,std_y,theta,centre)
+
+np.save('',fit)

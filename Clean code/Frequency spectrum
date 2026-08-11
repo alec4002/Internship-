@@ -1,0 +1,101 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calculate_2dft(input):              #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+# Read image
+Image = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ signal.npy')
+
+#create the range of k_x, k_y values
+Sampling_freq_x=np.sort(np.fft.fftfreq(len(Image[:,0])))
+Sampling_freq_y=np.sort(np.fft.fftfreq(len(Image[0,:])))
+
+Sampling_freq_y=np.flip(Sampling_freq_y)      #Array flipped as y axis in an image is flipped compared to normal plots
+Dimension= len(Image)                         #getting the dimension of the image. Important note; we assume the image is symmetric i.e. matrix is NxN
+
+#making the k space
+K_tot=np.empty([Dimension,Dimension])
+for i in range(0,len(Sampling_freq_y)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_x)):
+        p=(Sampling_freq_y[i]**2 + Sampling_freq_x[j]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
+
+
+#fourier transfer of the image 
+ft_Image =(calculate_2dft(Image))   
+
+#Storing the fourier amplitudes to there corresponding k value in a Dimension x 2 matrix
+Tot=np.empty([Dimension**2,2])
+flat_k =K_tot.ravel() 
+flat_ft_Image= ft_Image.ravel()
+for i in range(0,Dimension**2):
+    S=np.array([flat_k[i], flat_ft_Image[i]])
+    Tot[i]=S
+
+#sorting the matrix in order of increasing k values
+Tot=np.sort(Tot, axis=0)
+
+
+def Sort(m):                                 #Takes our Dimension x 2 matrix, 'm', and removes repeat k values, stores the unique k values with their corresponding total fourier amplitude. This is found by averaging the complex amplitude before taking the absolute value. It returns a Nx2 matrix.           
+    amps=np.array([])
+    k_vals=np.unique(m[:,0]) 
+
+    for i in range(0,len(k_vals)):
+        Temp_store=np.array([])
+        Test=k_vals[i]
+        boolian=np.any(m == Test, axis=1)
+        indexs= np.where(boolian == True)[0]
+
+        for j in indexs: 
+            Temp_store=np.append(Temp_store, m[:,1][j])
+        amps=np.append(amps, np.abs(np.sum(Temp_store))/len(Temp_store))
+
+    return(k_vals,amps)            
+    
+k_vals, Amps = (Sort(Tot))
+Raw_sorted=np.empty([len(k_vals),2])
+
+for i in range(0,len(k_vals)):
+    S=np.array([k_vals[i], Amps[i]])
+    Raw_sorted[i]=S
+
+def Bin(m,p):                                               #Takes our Nx2  matrix 'm', which contains our k values and their corresponding amplitudes, and then stores them into a number of bins, 'p'. The bin edges are calculated automatically.
+    amps=np.array([])      
+    bins=np.arange(0,np.max(m[:,0]),((np.max(m[:,0])))/p)
+
+    for i in range(0, len(bins)-1):
+        Test=bins[i]   
+        Temp_store=np.array([])
+        if Test == 0:
+            boolian= np.any( m <= Test, axis=1)
+            indexs= np.where(boolian == True)[0]            
+
+            for j in indexs: 
+                Temp_store=np.append(Temp_store, m[:,1][j])
+            amps=np.append(amps, np.sum(Temp_store))
+
+        else: 
+            
+            indexs= np.where( (m[:,0] > Test)  &  (m[:,0] <= bins[i+1]))[0]      
+
+            for j in indexs: 
+                Temp_store=np.append(Temp_store, m[:,1][j])
+            amps=np.append(amps, np.sum(Temp_store))
+
+
+   
+    return(amps, bins)
+
+counts, bins= Bin(Raw_sorted, len(k_vals))
+
+plt.figure()
+plt.stairs(counts, bins)
+plt.xlabel('Frequency')
+plt.ylabel('Fourier Amplitude') 
+plt.legend()
+plt.show()

@@ -1,0 +1,13 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')
+
+Strip_2=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[1100:1500,85:1965]
+
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Srip_2_raw.npy', Strip_2)
+
+Circle_1=image[0:400,100:500]
+Circle_2=image[0:400,560:960]
+Circle_3=image[0:400,1000:1400]
+Circle_4=image[0:400,1450:1850]

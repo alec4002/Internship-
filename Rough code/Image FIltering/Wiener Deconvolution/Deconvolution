@@ -18,14 +18,6 @@ def clean(m):                   #Removes digitisation noise
         M[i,j]=0
     return M 
 
-#image data
-Circle_1=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_1.npy'))
-Circle_2=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_2_new.npy'))
-Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
-Signal=Circle_1 + Circle_2
-Noise= Circle_1 - Circle_2
-Measured=Circle_1
-
 
 #the following set of code produces a hann filter of dim nxn to use 
 n=100 #length of Hann axis   #Set to 15 for my analysis 
@@ -62,20 +54,27 @@ def makeGaussian(size, rank, std_x, std_y, theta, center=None):    #this code co
 
     return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
 
-gauss=makeGaussian(400, 1, 13.5, 13.5, 0, center=(200,200))            
+gauss=makeGaussian(400, 1, 12.5, 12.5, 0, center=(200,200))            
 
+#image data
+Circle_1=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_1.npy'))
+Circle_2=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_2_new.npy'))
+Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
+Signal=Circle_1 + Circle_2
+Noise= Circle_1 - Circle_2
+Measured=Circle_1
 
 #Fourier Transforms
 Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\mft_tot.npy')
 Signal_ft=calculate_2dft(Signal)
 Noise_ft=calculate_2dft(Noise)
-Measured_ft=calculate_2dft(Circle_1)
+Measured_ft=calculate_2dft(Signal + Noise)*gauss
 
-filter_= np.divide( (np.abs(Signal_ft))**2, (np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2)
-Restored= ((Measured_ft*gauss/Mtf) * filter_)
+filter_= np.divide((np.abs(Signal_ft))**2, (np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2)
+Restored= ((Measured_ft/Mtf) * filter_)
 #Restored=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
 
-OD=-np.log((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
+OD=np.log((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
 
 
 plt.figure()
@@ -87,12 +86,12 @@ plt.set_cmap('gray')
 plt.subplot(1,3,2)
 plt.imshow((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
 plt.set_cmap('gray')
-plt.clim(0,2)
+plt.clim(0,4)
 plt.colorbar(location='bottom')
 
 plt.subplot(1,3,3)
 plt.imshow((OD))
 plt.set_cmap('gray')
-plt.clim(-10,10)
+plt.clim(-1.5,1.5)
 plt.colorbar(location='bottom')
 plt.show()

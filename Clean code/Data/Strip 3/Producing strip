@@ -1,0 +1,15 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')
+
+Strip_3=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[:,85:1965]
+
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Srip_3_raw.npy', Strip_3)
+
+plt.figure()
+plt.imshow(Strip_3) 
+plt.clim(0,2500)
+plt.colorbar(location='bottom')
+plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 3\Srip_3_raw.png', bbox_inches='tight')
+plt.show()
