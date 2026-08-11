@@ -9,7 +9,7 @@ from scipy.interpolate import RectBivariateSpline
 
 #Emma's code to load the data into python
 def load_hdf_BCcor(shotNum, ccdNum, timNum):
-    file_name = f"C:\Internship\Internship-\Data\XRFC3CCD-xrfc3_t4_117321.hdf"
+    file_name = f"C:\Internship\Internship-\Clean code\Data\XRFC3CCD-xrfc3_t4_117321.hdf"
 
     hdf_file  = SD(file_name, SDC.READ)
     sds_obj   = hdf_file.select(0)
@@ -29,7 +29,6 @@ strip=xrfc_data[1100:1500,85:1965]
 #np.save('C:\Internship\Internship-\Image FIltering\strip.npy', strip)    
 
 strip_noise=xrfc_data[1100:1500,85:1965]
-
 
 #reading 1-4 as left-right
 
@@ -57,10 +56,10 @@ for j in range(0,1880):
         if (i-200)**2 + (j-1650)**2 <= 180**2:# and (i-200)**2 + (j-1650)**2 >= 175**2 :
             strip_noise[i,j]=0   
 
-np.save('C:\Internship\Internship-\Image FIltering\strip_noise.npy', strip_noise)        
+np.save('C:\Internship\Internship-\Rough code\Image FIltering\strip_noise.npy', strip_noise)        
 
-S1=np.load('C:\Internship\Internship-\Image FIltering\strip.npy')
-S2=np.load('C:\Internship\Internship-\Image FIltering\strip_noise.npy')
+S1=np.load('C:\Internship\Internship-\Rough code\Image FIltering\strip.npy')
+S2=np.load('C:\Internship\Internship-\Rough code\Image FIltering\strip_noise.npy')
 #np.save('C:\Internship\Internship-\Image FIltering\Strip_2_no_background.npy', S1-S2)
 plt.figure()
 plt.imshow(S2)

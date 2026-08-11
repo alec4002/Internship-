@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')
 
-Strip_3=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[:,85:1965]
+Strip_3=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[600:1000,85:1965]
 
 np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Srip_3_raw.npy', Strip_3)
 

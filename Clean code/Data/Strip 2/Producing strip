@@ -5,9 +5,9 @@ np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')
 
 Strip_2=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[1100:1500,85:1965]
 
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Srip_2_raw.npy', Strip_2)
+Circle_1=Strip_2[0:400,100:500]
+Circle_2=Strip_2[0:400,560:960]
+Circle_3=Strip_2[0:400,1000:1400]
+Circle_4=Strip_2[0:400,1450:1850]
 
-Circle_1=image[0:400,100:500]
-Circle_2=image[0:400,560:960]
-Circle_3=image[0:400,1000:1400]
-Circle_4=image[0:400,1450:1850]
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Srip_2_raw.npy', Strip_2)
