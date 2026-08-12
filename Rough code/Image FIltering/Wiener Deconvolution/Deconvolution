@@ -54,18 +54,18 @@ def makeGaussian(size, rank, std_x, std_y, theta, center=None):    #this code co
 
     return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
 
-gauss=makeGaussian(400, 1, 12.5, 12.5, 0, center=(200,200))            
+gauss=makeGaussian(400, 1, 15, 15, 0, center=(200,200))            
 
 #image data
-Circle_1=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_1.npy'))
-Circle_2=clean(np.load('C:\Internship\Internship-\Image FIltering\Aligned strip 2\Cirlce_2_new.npy'))
-Backlighter=np.load('C:\Internship\Internship-\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
+Circle_1=clean(np.load('C:\Internship\Internship-\Rough code\Image FIltering\Aligned strip 2\Cirlce_1.npy'))
+Circle_2=clean(np.load('C:\Internship\Internship-\Rough code\Image FIltering\Aligned strip 2\Cirlce_2_new.npy'))
+Backlighter=np.load('C:\Internship\Internship-\Rough code\Image FIltering\Fitting Super Gaussian\Strip_2_circle_1_backligher_fit.npy')
 Signal=Circle_1 + Circle_2
 Noise= Circle_1 - Circle_2
 Measured=Circle_1
 
 #Fourier Transforms
-Mtf=np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\mft_tot.npy')
+Mtf=np.load('C:\Internship\Internship-\Rough code\Image FIltering\Wiener Deconvolution\mft_tot.npy')
 Signal_ft=calculate_2dft(Signal)
 Noise_ft=calculate_2dft(Noise)
 Measured_ft=calculate_2dft(Signal + Noise)*gauss
@@ -94,4 +94,5 @@ plt.imshow((OD))
 plt.set_cmap('gray')
 plt.clim(-1.5,1.5)
 plt.colorbar(location='bottom')
+#plt.savefig('C:\Internship\Internship-\Rough code\Image FIltering\Wiener Deconvolution\Deconvolution.png',bbox_inches='tight')
 plt.show()

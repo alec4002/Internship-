@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+Strip=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Strip_2_clean.npy')
+
+Shot_1=Strip[0:400,100:500]
+Shot_2=Strip[0:400,560:960]
+Shot_3=Strip[0:400,1000:1400]
+Shot_4=Strip[0:400,1450:1850]
+
+plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Shot_1)
+plt.clim(0,2000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,2)
+plt.imshow(Shot_2)
+plt.clim(0,2000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,3)
+plt.imshow(Shot_3)
+plt.clim(0,2000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,4)
+plt.imshow(Shot_4)
+plt.clim(0,2000)
+plt.colorbar(location='bottom')
+plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Strip_2_shots.png',bbox_inches='tight')
+plt.show()
+
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\shot_1.npy',Shot_1)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\shot_2.npy',Shot_2)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\shot_3.npy',Shot_3)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\shot_4.npy',Shot_4)
