@@ -3,10 +3,10 @@ import numpy as np
 from scipy import signal, datasets, ndimage
 
 
-Circle_1=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_1.npy')
-Circle_2=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2_new.npy')
-Circle_3=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_3_new.npy')
-Circle_4=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_4_new.npy') 
+Shot_1=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_1.npy')
+Shot_2=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_2_new.npy')
+Shot_3=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_3_new.npy')
+Shot_4=np.load('C:\Internship\Internship-\Image FIltering\Frame alignment\Cirlce_4_new.npy') 
 
 Roi= Circle_3[230:270,110:170]
 
@@ -23,3 +23,42 @@ for j in range(int(y-n/2),int(y+n/2)):
             shape[i,j]=Circle_2[i-int((x-n/2)),j-int((y-n/2))]
 
 New_shape=shape[53:453,46:446]
+
+plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Circle_1)
+plt.clim(0,500)
+plt.set_cmap('gray')
+#plt.plot(x,y, 'ro')
+plt.title('Circle 1')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,2)
+plt.imshow(Circle_2)
+#plt.plot(160,230, 'ro')
+plt.clim(0,500)
+plt.set_cmap('gray')
+plt.title('Circle 2')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,3)
+plt.imshow(Circle_3)
+plt.clim(0,500)
+plt.set_cmap('gray')
+plt.plot(140,250, 'ro')
+plt.title('Circle 3')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,4)
+plt.imshow(Circle_4)
+plt.clim(0,500)
+plt.set_cmap('gray')
+plt.plot(x,y, 'ro')
+plt.title('Circle 4')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.show()

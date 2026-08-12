@@ -1,0 +1,37 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+Shot_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_1.npy')
+Shot_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_2.npy')
+Shot_3=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_3.npy')
+Shot_4=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_4.npy')
+
+Backlighter_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_1.npy')
+Backlighter_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_2.npy')
+Backlighter_3=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_3.npy')
+Backlighter_4=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_4.npy')
+
+plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Shot_1)
+plt.clim(0,1000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,2)
+plt.imshow(Shot_2)
+plt.clim(0,1000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,3)
+plt.imshow(Shot_3)
+plt.clim(0,1000)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,4)
+plt.imshow(Shot_4)
+plt.clim(0,1000)
+plt.colorbar(location='bottom')
+
+
+plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmissions.png',bbox_inches='tight')
+plt.show()

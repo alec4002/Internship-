@@ -68,7 +68,7 @@ Measured=Circle_1
 Mtf=np.load('C:\Internship\Internship-\Rough code\Image FIltering\Wiener Deconvolution\mft_tot.npy')
 Signal_ft=calculate_2dft(Signal)
 Noise_ft=calculate_2dft(Noise)
-Measured_ft=calculate_2dft(Signal + Noise)*gauss
+Measured_ft=calculate_2dft(Signal + Noise)
 
 filter_= np.divide((np.abs(Signal_ft))**2, (np.abs(Signal_ft))**2 + (np.abs(Noise_ft))**2)
 Restored= ((Measured_ft/Mtf) * filter_)

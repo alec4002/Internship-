@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import chisquare
 
 #Read image
-image = np.load('')
+image = np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\shot_4.npy')
 
 def calculate_2dft(input):          #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
     ft = np.fft.ifftshift(input)
@@ -17,18 +17,17 @@ def calculate_2dft(input):          #Fucntion calculates the 2D fourier transfor
 ft= calculate_2dft(image)
 
 #the following set of code produces a hann filter of dim nxn to use 
-n=15 #length of Hann axis, set to 15 for my analysis 
+n=12 #length of Hann axis   #Set to 15 for my analysis 
 win = skimage.filters.window('hann', (n, n))
-filter=np.empty((400,400))
+Haan_filter=np.empty((400,400))
 y,x = 200,200                             #x,y is the centre point
 
-for j in range(int(y-n/2),int(y+n/2)):                              #In orde to appy a Hann window to the area we want, we have tp create it on a smaller grid, before moving it on to the correct sized grid.
+for j in range(int(y-n/2),int(y+n/2)):
     for i in range(int(x-n/2),int(x+n/2)):
-            filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
+            Haan_filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
 
-Backlighter= np.abs(np.fft.ifftshift(np.fft.ifft2(ft*filter)))      #Backlighter profile for this shot
 
-def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre_x, centre_y):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
     """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
                                                                     #M is  Nx2 matrix where N is the no of data 
     size is the length of a side of the square
@@ -38,8 +37,8 @@ def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code come
 
     x, y= M
 
-    x0 = centre
-    y0 = centre
+    x0 = centre_x
+    y0 = centre_y
 
 
     a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
@@ -53,13 +52,20 @@ def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre):    #this code come
 x, y = np.arange(0, 400), np.arange(0, 400)
 X, Y = np.meshgrid(x, y)
 
+Filter=makeGaussian((X,Y),1,2,5,5,0,200,200)
+Backlighter= np.abs(np.fft.ifftshift(np.fft.ifft2(ft*Haan_filter)))      #Backlighter profile for this shot
+
+plt.figure()
+plt.imshow(Haan_filter)
+plt.show()
+
 xdata = np.vstack((X.ravel(), Y.ravel()))
 
 #turning space, data into 1D arrays so curve fit can work
 ydata= Backlighter.ravel()
 
 #initial guesses; may have issues with the centre
-p0=([np.max(ydata),1,100,100,0,100])
+p0=([np.max(ydata),1,100,100,0,200,200])
 
 #Getting params 
 popt, pcov = curve_fit(makeGaussian, xdata, ydata, p0)
@@ -70,7 +76,8 @@ rank=popt[1]
 std_x=popt[2]
 std_y=popt[3]
 theta=popt[4]
-centre=popt[5]
+centre_x=popt[5]
+centre_y=popt[6]
 
 #getting the errors
 errors=np.array([])
@@ -78,6 +85,40 @@ for i in range(0,len(pcov)):
     errors=np.append(errors, pcov[i,i]**(0.5))
 
 #getting fit
-fit=makeGaussian((X,Y), Amp, rank,std_x,std_y,theta,centre)
+fit=makeGaussian((X,Y), Amp, rank,std_x,std_y,theta,centre_x, centre_y)
 
-np.save('',fit)
+line_out_backlighter_x=Backlighter[200]
+line_out_backlighter_y=Backlighter[:,200]
+line_out_gauss_x=fit[200]
+line_out_gauss_y=fit[:,200]
+
+transmission=image-fit
+
+plt.figure()
+plt.subplot(3,2,1)
+plt.imshow(Backlighter)
+plt.title('Backlighter')
+plt.colorbar()
+
+plt.subplot(3,2,2)
+plt.imshow(fit)
+plt.title('fit')
+plt.colorbar()
+
+plt.subplot(3,2,3)
+plt.plot(np.arange(0,400), line_out_backlighter_x)
+
+plt.subplot(3,2,4)
+plt.plot(np.arange(0,400), line_out_gauss_x)
+
+plt.subplot(3,2,5)
+plt.plot(np.arange(0,400), line_out_backlighter_y)
+
+plt.subplot(3,2,6)
+plt.plot(np.arange(0,400), line_out_gauss_y)
+#plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backlighter_fitting.png',bbox_inches='tight')
+plt.show()
+
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_4',transmission)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_4',fit)
+
