@@ -1,0 +1,16 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+Shot_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_1_correlated.npy')
+Shot_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_2_correlated.npy')
+Shot_3=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_3_correlated.npy')
+Shot_4=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_4_correlated.npy')
+
+plt.figure()
+plt.imshow(Shot_4)
+plt.clim(0,1000)
+
+
+
+#plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Correlated_shots.png',bbox_inches='tight')
+plt.show()
