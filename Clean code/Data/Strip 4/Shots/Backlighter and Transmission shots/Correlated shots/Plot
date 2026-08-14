@@ -7,10 +7,25 @@ Shot_3=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backligh
 Shot_4=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_4_correlated.npy')
 
 plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Shot_1)
+plt.colorbar(location='bottom')
+plt.clim(0,2000)
+
+plt.subplot(1,4,2)
+plt.imshow(Shot_2)
+plt.colorbar(location='bottom')
+plt.clim(0,2000)
+
+plt.subplot(1,4,3)
+plt.imshow(Shot_3)
+plt.colorbar(location='bottom')
+plt.clim(0,2000)
+
+plt.subplot(1,4,4)
 plt.imshow(Shot_4)
-plt.clim(0,1000)
+plt.colorbar(location='bottom')
+plt.clim(0,2000)
 
-
-
-#plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Correlated_shots.png',bbox_inches='tight')
+plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Correlated_shots.png',bbox_inches='tight')
 plt.show()
