@@ -7,7 +7,7 @@ def calculate_2dft(input):              #Fucntion calculates the 2D fourier tran
     return np.fft.fftshift(ft)
 
 # Read image
-Image = np.load('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\ signal.npy')
+Image = np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Shot_4_reconstructed.npy')
 
 #create the range of k_x, k_y values
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(Image[:,0])))
@@ -27,7 +27,7 @@ for i in range(0,len(Sampling_freq_y)):
 
 
 #fourier transfer of the image 
-ft_Image =(calculate_2dft(Image))   
+ft_Image = calculate_2dft(Image)  
 
 #Storing the fourier amplitudes to there corresponding k value in a Dimension x 2 matrix
 Tot=np.empty([Dimension**2,2])
@@ -58,6 +58,7 @@ def Sort(m):                                 #Takes our Dimension x 2 matrix, 'm
     return(k_vals,amps)            
     
 k_vals, Amps = (Sort(Tot))
+k_vals=k_vals*333.3333333333                #333.3333333 converts us to units of mm^-1
 Raw_sorted=np.empty([len(k_vals),2])
 
 for i in range(0,len(k_vals)):
@@ -91,11 +92,14 @@ def Bin(m,p):                                               #Takes our Nx2  matr
    
     return(amps, bins)
 
-counts, bins= Bin(Raw_sorted, len(k_vals))
+counts, bins= Bin(Raw_sorted, 100)
+
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_Noise.npy', counts)
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_Noise.npy',bins)
 
 plt.figure()
 plt.stairs(counts, bins)
-plt.xlabel('Frequency')
+plt.xlabel('Frequency ($mm^{-1}$)')
 plt.ylabel('Fourier Amplitude') 
 plt.legend()
 plt.show()

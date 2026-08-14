@@ -1,0 +1,113 @@
+import numpy as np
+from scipy import signal, datasets
+import matplotlib.pyplot as plt
+import skimage
+
+def calculate_2dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+
+def clean(m):                   #Removes digitisation noise
+    M=m
+    indexs=np.where( m < 0)
+    row_index=indexs[0]
+    column_index=indexs[1]
+    for i, j in zip(row_index, column_index):
+        M[i,j]=0
+    return M 
+
+
+#the following set of code produces a hann filter of dim nxn to use 
+n=100 #length of Hann axis   #Set to 15 for my analysis 
+
+win = skimage.filters.window('hann', (n, n))
+Haan_filter=np.zeros((400,400))
+y,x = 200,200                             #x,y is the centre point
+
+for j in range(int(y-n/2),int(y+n/2)):
+    for i in range(int(x-n/2),int(x+n/2)):
+            Haan_filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
+
+def makeGaussian(size, rank, std_x, std_y, theta, center=None):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+    """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
+
+    size is the length of a side of the square
+    fwhm is full-width-half-maximum, which
+    can be thought of as an effective radius.
+    """
+
+    x = np.arange(0, size, 1, float)
+    y = x[:,np.newaxis]
+
+    if center is None:
+        x0 = y0 = size // 2
+    else:
+        x0 = center[0]
+        y0 = center[1]
+
+
+    a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
+    b= -((np.cos(theta) * np.sin(theta))/(2*std_x**2))+((np.cos(theta) * np.sin(theta))/(2*std_y**2))   
+    c= ((np.sin(theta))**2/(2*std_x**2))+((np.cos(theta))**2/(2*std_y**2))
+
+    return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
+
+gauss=makeGaussian(400, 5, 12, 12, 0, center=(200,200))            
+
+#image data
+Backlighter=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_1.npy')
+Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_1_correlated.npy'))
+Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Shot_2_correlated.npy'))
+C_x=Shot_1 + Shot_2
+N_x= Shot_1 - Shot_2
+
+#Fourier Transforms
+Mtf=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys.npy')
+C_ft=calculate_2dft(C_x)
+N_ft=calculate_2dft(N_x)
+S_ft_mod_squared= (np.abs(C_ft)**2 - np.abs(N_ft)**2) * gauss
+
+
+np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ C_ft.npy',C_ft)
+np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ N_ftt.npy',N_ft)
+
+filter_= np.divide((np.abs(S_ft_mod_squared))**2, (np.abs(S_ft_mod_squared))**2 + (np.abs(N_ft))**2)
+Restored= ((C_ft/Mtf) * filter_)
+#Restored=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
+Restored_im=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
+OD=-np.log(((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))+Backlighter)/(Backlighter))
+
+plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Shot_1)
+#plt.clim(0,5000)
+plt.colorbar(location='bottom')
+plt.title('Original Shot')
+plt.legend()
+plt.set_cmap('gray')
+
+plt.subplot(1,4,2)
+plt.imshow((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
+plt.set_cmap('gray')
+plt.clim(0,20)
+plt.title('Reconstructed Shot')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,3)
+plt.imshow(Backlighter)
+plt.set_cmap('gray')
+
+plt.subplot(1,4,4)
+plt.imshow((OD))
+plt.set_cmap('gray')
+plt.clim(-.005,0)
+plt.colorbar(location='bottom')
+plt.title('Optical density (working fig.)')
+plt.legend()
+#plt.savefig('C:\Internship\Internship-\Rough code\Image FIltering\Wiener Deconvolution\Deconvolution.png',bbox_inches='tight')
+plt.show()
+
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Shot_4_reconstructed.npy',(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))
