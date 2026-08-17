@@ -7,7 +7,7 @@ def calculate_2dft(input):              #Fucntion calculates the 2D fourier tran
     return np.fft.fftshift(ft)
 
 # Read image
-Image = np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ C_ft.npy')
+Image = np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\OD.npy')
 
 #create the range of k_x, k_y values
 Sampling_freq_x=np.sort(np.fft.fftfreq(len(Image[:,0])))
@@ -92,7 +92,7 @@ def Bin(m,p):                                               #Takes our Nx2  matr
    
     return(amps, bins)
 
-counts, bins= Bin(Raw_sorted, len(k_vals))
+counts, bins= Bin(Raw_sorted, 100)
 
 np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_Signal.npy', counts)
 np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_Signal.npy',bins)
