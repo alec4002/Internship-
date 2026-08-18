@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import chisquare
 
 #Read image
-image = np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\shot_4.npy')
+image = np.load('C:\Internship\Internship-\Clean code\Data\Strip 1\Shots\shot_4.npy')
 
 def calculate_2dft(input):          #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
     ft = np.fft.ifftshift(input)
@@ -54,10 +54,6 @@ X, Y = np.meshgrid(x, y)
 
 Filter=makeGaussian((X,Y),1,2,5,5,0,200,200)
 Backlighter= np.abs(np.fft.ifftshift(np.fft.ifft2(ft*Haan_filter)))      #Backlighter profile for this shot
-
-plt.figure()
-plt.imshow(Haan_filter)
-plt.show()
 
 xdata = np.vstack((X.ravel(), Y.ravel()))
 
@@ -119,6 +115,6 @@ plt.plot(np.arange(0,400), line_out_gauss_y)
 #plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backlighter_fitting.png',bbox_inches='tight')
 plt.show()
 
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Transmission_4',transmission)
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backligher_shot_4',fit)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 1\Shots\Backlighter\Shot_4_no_profile',transmission)
+np.save('C:\Internship\Internship-\Clean code\Data\Strip 1\Shots\Backlighter\Backligher_shot_4',fit)
 

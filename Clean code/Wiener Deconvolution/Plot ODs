@@ -1,0 +1,25 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+Counts_OD= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_OD.npy')
+Counts_OD_1= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_OD_2.npy')
+Bins_OD= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_OD.npy')
+Bins_OD_1=  np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_OD_2.npy')
+
+def f(k):
+    p=3
+    u=788
+    l=167
+    return 2500*p*u*2/(l*(k)**2)
+
+
+plt.figure()
+plt.stairs(Counts_OD, Bins_OD, label='OD late' )
+plt.stairs(Counts_OD_1, Bins_OD_1, label='OD early' ) 
+plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
+plt.xlabel('Frequency')
+plt.ylabel('Fourier amplitude')
+#plt.yscale('log')
+plt.legend()
+#plt.savefig('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Cut_off_spectra.png', bbox_inches='tight')
+plt.show()
