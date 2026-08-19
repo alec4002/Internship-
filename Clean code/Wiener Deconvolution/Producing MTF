@@ -36,4 +36,4 @@ mtf_tot=(M_fc(K_tot, 0.89, 0.22, 105.4e-6, 2356.8e-6))  * mtf_pinhole
 plt.figure()
 plt.imshow(mtf_tot)
 plt.show()
-np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys', mtf_tot)
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys', mtf_tot)

@@ -43,7 +43,8 @@ def makeGaussian(size, rank, std_x, std_y, theta, center=None):    #this code co
 
     return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
 
-gauss=makeGaussian(400, 5, 10, 10, 0, center=(200,200))            
+gauss=makeGaussian(400, 2, 12, 12, 0, center=(200,200))   
+    
 
 #image data
 Backlighter_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Backligher_shot_1.npy')
@@ -63,7 +64,7 @@ shift=np.array([32,4])
 New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
 #Getting an average backlighter profile
-Backlighter= (Backlighter_1+Backlighter_2)/2 
+Backlighter= (Backlighter_1+Backlighter_1)/2 
 
 Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Correlated shots\Shot_1_correlated.npy'))+ Backlighter_1
 Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Correlated shots\Shot_2_correlated.npy'))+ Backlighter_2
@@ -72,33 +73,63 @@ Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Ba
 t_1=Shot_1/Backlighter_1
 t_2=Shot_2/Backlighter_2
 
-C_x_t=t_1 + t_2
-N_x_t= t_1 - t_2
+S_x_t= (t_1 + t_2)  #should these be divided by 2
+N_x_t= (t_1 - t_2)
 
-C_x=C_x_t * Backlighter
+S_x=S_x_t * Backlighter
 N_x=N_x_t * Backlighter
 
 #Fourier Transforms
 Mtf=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys.npy') 
-C_ft=calculate_2dft(C_x) 
+Mtf=Mtf/np.max(Mtf)
+S_ft=calculate_2dft(S_x) 
 N_ft=calculate_2dft(N_x) 
-S_ft_mod_squared= (np.abs(C_ft)**2 - np.abs(N_ft)**2) * gauss
+C_ft= ((S_ft) + (N_ft))
 
-np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ C_ft.npy',C_ft)
-np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ N_ft.npy',N_ft)
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ C_ft.npy',C_ft)
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\ N_ft.npy',N_ft)
 
-filter_= np.divide((np.abs(S_ft_mod_squared))**2, (np.abs(S_ft_mod_squared))**2 + (np.abs(N_ft))**2)
-Restored= (((C_ft/Mtf)) * filter_)
+filter_= np.divide((np.abs(S_ft))**2, (np.abs(S_ft))**2 + (np.abs(N_ft))**2)
+Restored= ((C_ft/Mtf) * filter_) * gauss
 
 
 Restored_im=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
-Backlighter= Backlighter / (73)
+Backlighter= Backlighter 
 od=-np.log(((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))/(Backlighter))
 
 
 plt.figure()
+plt.subplot(2,2,1)
+plt.imshow(t_1)
+plt.clim(0,10)
+plt.colorbar()
+
+plt.subplot(2,2,2)
+plt.imshow(t_2)
+plt.clim(0,10)
+plt.colorbar()
+
+
+plt.subplot(2,2,3)
+plt.imshow(S_x_t)
+plt.clim(0,10)
+plt.colorbar()
+
+
+plt.subplot(2,2,4)
+plt.imshow(N_x_t)
+plt.clim(-1,1)
+plt.colorbar()
+plt.show()
+
+plt.figure()
+plt.imshow(filter_)
+plt.show()
+
+
+plt.figure()
 plt.subplot(1,3,1)
-plt.imshow(C_x)#[100:300,100:300])
+plt.imshow(((np.abs(np.fft.ifftshift(np.fft.ifft2(C_ft))))))#[100:300,100:300])
 #plt.clim(0,2000)
 plt.colorbar(location='bottom')
 plt.title('C_x')
@@ -116,7 +147,7 @@ plt.colorbar(location='bottom')
 plt.subplot(1,3,3)
 plt.imshow(od[150:350,100:300])
 plt.set_cmap('gray')
-#plt.clim(-0.5,.5)
+#plt.clim(-4,4)
 plt.colorbar(location='bottom')
 plt.title('Optical density')
 plt.legend()

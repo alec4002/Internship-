@@ -1,0 +1,25 @@
+from scipy import ndimage
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2 as cv
+
+Shot_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_1_no_profile.npy')
+Shot_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_2_no_profile.npy')
+
+Shot_1=np.float32(Shot_1)
+Shot_2=np.float32(Shot_2)
+
+Filtered_1=cv.bilateralFilter(Shot_1, 10, 400, 400)
+Filtered_2=cv.bilateralFilter(Shot_2, 10, 400, 400)
+
+plt.figure() 
+plt.subplot(1,2,1)
+plt.imshow(Filtered_1)
+plt.clim(0,500)
+
+plt.subplot(1,2,2)
+plt.imshow(Filtered_2)
+plt.clim(0,500)
+
+
+plt.show()
