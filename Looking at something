@@ -1,5 +1,0 @@
-import numpy as np 
-
-ks=np.fft.fftfreq(400, 3e-6)
-ks_=np.fft.fftfreq(400)
-print((ks*1e-3)/ks_)
