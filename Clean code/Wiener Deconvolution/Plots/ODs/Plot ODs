@@ -1,10 +1,13 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-Counts_OD= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_OD.npy')
-Counts_OD_1= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Counts_OD_2.npy')
-Bins_OD= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_OD.npy')
-Bins_OD_1=  np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Bins_OD_2.npy')
+Counts_pair_1=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_counts.npy')
+Bins_pair_1=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_bins.npy')
+Counts_pair_2=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
+Bins_pair_2=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
+Counts_pair_3=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_counts.npy')
+Bins_pair_3=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_bins.npy')
+
 
 def f(k):
     p=3
@@ -14,13 +17,15 @@ def f(k):
 
 
 plt.figure()
-plt.stairs(Counts_OD, Bins_OD, label='OD late' )
-plt.stairs(Counts_OD_1, Bins_OD_1, label='OD early' ) 
-plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
+plt.stairs(Counts_pair_1, Bins_pair_1, label='pair 1' )
+plt.stairs(Counts_pair_2, Bins_pair_2, label='pair 2' )
+plt.stairs(Counts_pair_3, Bins_pair_3, label='pair 3' )
+
+#plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
 plt.xlabel('Frequency')
 plt.ylabel('Fourier amplitude')
-plt.ylim([0,2000])
-plt.xlim([0,50])
+#plt.ylim([0,2000])
+plt.xlim([0,60])
 plt.legend()
-#plt.savefig('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Cut_off_spectra.png', bbox_inches='tight')
+#plt.savefig('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Optical density comparison.png', bbox_inches='tight')
 plt.show()
