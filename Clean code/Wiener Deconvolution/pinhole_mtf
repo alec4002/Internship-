@@ -3,7 +3,7 @@ import numpy as np
 import scipy 
 import scipy.io as sio
 
-mat_contents = sio.loadmat('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\pinhole_mft_norm.mat', spmatrix=False)
+mat_contents = sio.loadmat('C:\Internship\Internship-\Clean code\Wiener Deconvolution\pinhole_mft_norm.mat', spmatrix=False)
 
 #print(sorted(mat_contents.keys()))
 
@@ -20,4 +20,5 @@ for i in range(0,len(mtf_y)):
         q=np.append(q,p)
     mtf_tot[i]=q
 
-np.save('C:\Internship\Internship-\Image FIltering\Wiener Deconvolution\pinhole_mft.npy', mtf_tot)
+
+np.save('c:\Internship\Internship-\Clean code\Wiener Deconvolution\pinhole_mft.npy', mtf_tot)

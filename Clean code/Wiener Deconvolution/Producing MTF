@@ -28,12 +28,12 @@ def calculate_1dft(input):
     return np.fft.fftshift(ft)
 
 def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):                    #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
-    p=alpha_1*np.exp(-(sigma_1 * f)**2)
-    q=alpha_2*np.exp(-(sigma_2 * f)**2)
+    p=alpha_1*np.exp(-(sigma_1 * (f/6))**2)
+    q=alpha_2*np.exp(-(sigma_2 * (f/6))**2)
     return(p+q)
 
-mtf_tot=(M_fc(K_tot, 0.89, 0.22, 105.4e-6, 2356.8e-6))  * mtf_pinhole 
+mtf_tot=  mtf_pinhole * (M_fc(K_tot, 0.89, 0.22, 105.4, 2356.8))  
 plt.figure()
 plt.imshow(mtf_tot)
 plt.show()
-#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys', mtf_tot)
+np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys', mtf_tot)
