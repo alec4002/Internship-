@@ -1,0 +1,29 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+
+#Emma's code to load the data into python
+def load_hdf_BCcor(shotNum, ccdNum, timNum):
+    file_name = f"C:\Internship\Internship-\Clean code\Full SSD\XRFC3CCD-xrfc3_t4_117323.hdf"
+
+    hdf_file  = SD(file_name, SDC.READ)
+    sds_obj   = hdf_file.select(0)
+    data      = sds_obj.get()
+    return data[0] - data[1]
+
+# Backlighter is SFC3CCD in TIM04
+shot_Number = 117315
+ccd_Number  = 3
+tim_Number  = 4
+
+xrfc_data   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
+
+plt.figure()
+plt.imshow(xrfc_data)
+plt.clim(0,3000)
+plt.colorbar()
+plt.show()
+
+np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Raw data full strip.npy',xrfc_data)

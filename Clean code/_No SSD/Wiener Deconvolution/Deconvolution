@@ -47,8 +47,8 @@ gauss=makeGaussian(400, 2, 22, 22, 0, center=(200,200))
     
 
 #image data
-Backlighter_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter\Backligher_shot_3.npy')
-Backlighter_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter\Backligher_shot_4.npy')
+Backlighter_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_3.npy')
+Backlighter_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_4.npy')
 
 #This aligning Backligher_2 wrt Baclkighter_1 
 shape=np.empty((800,800))
@@ -63,8 +63,8 @@ for j in range(int(y_-n/2),int(y_+n/2)):
 shift=np.array([32,4])
 New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
-Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy')) + Backlighter_1
-Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy')) + Backlighter_2
+Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy')) + Backlighter_1
+Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy')) + Backlighter_2
 
 #Cropping data to the imprint region
 
@@ -83,7 +83,7 @@ S_x=S_x_t * Backlighter
 N_x=N_x_t * Backlighter
 
 #Fourier Transforms
-Mtf= np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\MTF\Mtf_sys.npy') 
+Mtf= np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\MTF\Mtf_sys.npy') 
 
 S_ft= calculate_2dft(S_x) 
 N_ft= calculate_2dft(N_x) 
@@ -144,4 +144,4 @@ plt.legend()
 plt.show()
 
 
-np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[100:300,50:250])
+#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[100:300,50:250])
