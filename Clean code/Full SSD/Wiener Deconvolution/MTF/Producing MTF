@@ -1,0 +1,42 @@
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+import scipy 
+from scipy import integrate
+
+mtf_pinhole=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\pinhole_mft.npy')
+
+x=np.arange(0,400)
+y=np.arange(0,400)
+Sampling_freq_x=np.sort(np.fft.fftfreq(400))
+Sampling_freq_y=np.sort(np.fft.fftfreq(400))
+
+#making the k space
+K_tot=np.empty([400,400])
+
+for i in range(0,len(Sampling_freq_x)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_y)):
+        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
+
+#functions required
+def calculate_1dft(input):
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft(ft)
+    return np.fft.fftshift(ft)
+
+def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):                    #MTF framing camera. Smalyuk only defines it in terms of the total f/k. alphas/sigmas are experimentall determined
+    p=alpha_1*np.exp(-(sigma_1 * (f/6))**2)
+    q=alpha_2*np.exp(-(sigma_2 * (f/6))**2)
+    return(p+q)
+
+mtf_fc=(M_fc(K_tot, 0.89, 0.22, 105.4, 2356.8))  
+mtf_fc_norm= mtf_fc/np.max(mtf_fc)
+
+mtf_tot=  mtf_pinhole * mtf_fc 
+plt.figure()
+plt.imshow(mtf_tot)
+plt.show()
+np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Mtf_sys', mtf_tot)

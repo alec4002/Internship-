@@ -1,12 +1,12 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-Counts_pair_1=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_counts.npy')
-Bins_pair_1=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_bins.npy')
-Counts_pair_2=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
-Bins_pair_2=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
-Counts_pair_3=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_counts.npy')
-Bins_pair_3=np.load('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_bins.npy')
+Counts_pair_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_counts.npy')
+Bins_pair_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_bins.npy')
+Counts_pair_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
+Bins_pair_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
+Counts_pair_3=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_counts.npy')
+Bins_pair_3=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_bins.npy')
 
 
 def f(k):
@@ -22,10 +22,10 @@ plt.stairs(Counts_pair_2, Bins_pair_2, label='pair 2' )
 plt.stairs(Counts_pair_3, Bins_pair_3, label='pair 3' )
 
 #plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
-plt.xlabel('Frequency')
+plt.xlabel('Frequency/ $mm^{-1}$')
 plt.ylabel('Fourier amplitude')
 #plt.ylim([0,2000])
 plt.xlim([0,60])
 plt.legend()
-plt.savefig('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Optical density comparison.png', bbox_inches='tight')
+plt.savefig('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Optical density comparison.png', bbox_inches='tight')
 plt.show()

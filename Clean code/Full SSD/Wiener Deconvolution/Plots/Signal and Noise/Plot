@@ -1,0 +1,17 @@
+import numpy as np 
+import matplotlib.pyplot as plt
+
+Counts_signal= np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\Signal and Noise\Counts_signal.npy')
+Counts_noise= np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\Signal and Noise\Counts_Noise.npy')
+Bins_signal= np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\Signal and Noise\Bins_signal.npy')
+Bins_noise=  np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\Signal and Noise\Bins_Noise.npy')
+
+plt.figure()
+plt.stairs(Counts_signal, Bins_signal, label='Signal' )
+plt.stairs(Counts_noise, Bins_noise, label='Noise' ) 
+plt.xlabel('Frequency')
+plt.ylabel('Fourier amplitude')
+#plt.yscale('log')
+plt.legend()
+#plt.savefig('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Cut_off_spectra.png', bbox_inches='tight')
+plt.show()

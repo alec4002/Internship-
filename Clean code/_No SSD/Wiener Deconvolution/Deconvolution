@@ -9,13 +9,13 @@ def calculate_2dft(input):
     return np.fft.fftshift(ft)
 
 
-def clean(m):                   #Removes digitisation noise
+def clean(m,q,w):                   #Removes digitisation noise
     M=m
-    indexs=np.where( m < 0)
+    indexs=np.where( m < q)
     row_index=indexs[0]
     column_index=indexs[1]
     for i, j in zip(row_index, column_index):
-        M[i,j]=0
+        M[i,j]=w
     return M 
 
 
@@ -53,21 +53,32 @@ Backlighter_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4
 #This aligning Backligher_2 wrt Baclkighter_1 
 shape=np.empty((800,800))
 y_,x_ = 400,400 
-centre=np.array([95,275])
+n=len(Backlighter_1)
+
+for j in range(int(y_-n/2),int(y_+n/2)):
+    for i in range(int(x_-n/2),int(x_+n/2)):
+            shape[i,j]=Backlighter_1[i-int((x_-n/2)),j-int((y_-n/2))]
+
+shift=np.array([46,3])
+
+Backlighter_1=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
+
+shape=np.empty((800,800))
+y_,x_ = 400,400 
 n=len(Backlighter_2)
 
 for j in range(int(y_-n/2),int(y_+n/2)):
     for i in range(int(x_-n/2),int(x_+n/2)):
             shape[i,j]=Backlighter_2[i-int((x_-n/2)),j-int((y_-n/2))]
 
-shift=np.array([32,4])
-New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
+shift=np.array([115,7])
+Backlighter_2=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
-Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy')) + Backlighter_1
-Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy')) + Backlighter_2
+Backlighter_1=clean(Backlighter_1,1,1)
+Backlighter_2=clean(Backlighter_2,1,1)
 
-#Cropping data to the imprint region
-
+Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy'),0,0) + Backlighter_1
+Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy'),0,0) + Backlighter_2
 
 #Getting an average backlighter profile
 Backlighter= (Backlighter_1+Backlighter_1)/2 
@@ -144,4 +155,4 @@ plt.legend()
 plt.show()
 
 
-#np.save('C:\Internship\Internship-\Clean code\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[100:300,50:250])
+np.save('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[100:300,50:250])
