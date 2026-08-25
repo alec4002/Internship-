@@ -22,7 +22,7 @@ plt.stairs(Counts_pair_2, Bins_pair_2, label='pair 2' )
 plt.stairs(Counts_pair_3, Bins_pair_3, label='pair 3' )
 
 #plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
-plt.xlabel('Frequency/ $mm^{-1}$')
+plt.xlabel('Frequency ($mm^{-1}$)')
 plt.ylabel('Fourier amplitude')
 #plt.ylim([0,2000])
 plt.xlim([0,60])

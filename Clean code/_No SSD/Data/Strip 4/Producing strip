@@ -1,15 +1,25 @@
-import numpy as np 
+import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 
-np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')
+np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Raw data full strip.npy')
 
-Strip_4=np.load('C:\Internship\Internship-\Clean code\Data\Raw data full strip.npy')[150:550,85:1965]
+Strip_4=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Raw data full strip.npy')[150:550,85:1965]
 
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Srip_4_raw.npy', Strip_4)
+#np.save('C:\Internship\Internship-\Clean code\Data\Strip 4\Srip_4_raw.npy', Strip_4)
 
 plt.figure()
-plt.imshow(Strip_4) 
-plt.clim(0,2500)
-plt.colorbar(location='bottom')
-plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Srip_4_raw.png', bbox_inches='tight')
+plt.imshow(Strip_4, extent=[0,5640,0,1200]) 
+plt.clim(0,5000)
+#plt.set_xlim(0,400) 
+plt.xlabel('Distance ($\mu m$)')
+plt.ylabel('Distance ($\mu m$)')
+plt.set_cmap('viridis')
+plt.colorbar(location='bottom', label='Intensity [A.U]')
+#plt.savefig('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Srip_4_raw.png', bbox_inches='tight')
 plt.show()
+
+
+
+
+ 
