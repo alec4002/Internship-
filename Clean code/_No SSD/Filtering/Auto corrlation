@@ -3,14 +3,14 @@ import numpy as np
 from scipy import signal, datasets, ndimage
 
 
-Shot_1=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_1_no_profile.npy')
-Shot_2=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_2_no_profile.npy')
-Shot_3=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_3_no_profile.npy')
-Shot_4=np.load('C:\Internship\Internship-\Clean code\Data\Strip 2\Shots\Backlighter\Shot_4_no_profile.npy')
+Shot_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Transmission_1.npy')
+Shot_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Transmission_2.npy')
+#Shot_3=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Shot_3_no_profile.npy')
+#Shot_4=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Shot_4_no_profile.npy')
 
-Roi= Shot_1[250:300,70:120]
-centre=np.array([95,275])
-corr = signal.correlate2d(Shot_2, Roi,  boundary='symm', mode='same')
+Roi= Shot_1[210:270,80:140]
+centre=np.array([110,240])
+corr = signal.correlate2d(Shot_2[0:300,0:300], Roi,  boundary='symm', mode='same')
 y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
 print(x,y)
 
@@ -29,24 +29,30 @@ New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shi
 
 plt.figure()
 plt.subplot(1,4,1)
-plt.imshow(Shot_1)
+plt.imshow(Shot_1,extent=([0,1200,0,1200]))
 plt.colorbar(location='bottom')
+plt.title('Image 1')
+plt.legend()
 plt.clim(0,500)
 
 plt.subplot(1,4,2)
-plt.imshow(Roi)
+plt.imshow(Roi,extent=([240,420,1200-630,1200-810]))
 plt.colorbar(location='bottom')
+plt.title('Sample')
+plt.legend()
 plt.clim(0,500)
 
 plt.subplot(1,4,3)
-plt.imshow(Shot_2)
-plt.plot(x,y, 'ro')
+plt.imshow(Shot_2[0:300,0:300],extent=([0,900,300,1200]))
 plt.clim(0,300)
+plt.title('Image 2')
+plt.legend()
 plt.colorbar(location='bottom')
 
 plt.subplot(1,4,4)
-plt.imshow(corr)
-plt.plot(x,y, 'ro')
+plt.imshow(corr,extent=([0,1200,0,1200]))
+plt.title('Correlation image')
+plt.legend()
 plt.colorbar(location='bottom')
 plt.show()
 

@@ -7,7 +7,7 @@ from scipy.optimize import curve_fit
 from scipy.stats import chisquare
 
 #Read image
-image = np.load('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\shot_4.npy')
+image = np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\shot_1.npy')
 
 def calculate_2dft(input):          #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
     ft = np.fft.ifftshift(input)
@@ -91,30 +91,76 @@ line_out_gauss_y=fit[:,200]
 transmission=image-fit
 
 plt.figure()
-plt.subplot(3,2,1)
-plt.imshow(Backlighter)
+
+plt.subplot(1,4,1)
+plt.imshow(image, extent=(0,1200,0,1200))
+plt.set_cmap('viridis')
+plt.clim(0,5000)
+plt.title('Image')
+plt.ylabel('Distance ($\mu m$)')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,2)
+plt.imshow(np.log(np.abs(ft)), extent=(0,1200,0,1200))
+plt.set_cmap('viridis')
+plt.title('FT')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,3)
+plt.imshow(np.log(np.abs(ft))*Haan_filter, extent=(0,1200,0,1200))
+plt.set_cmap('viridis')
+plt.title('Filter FT')
+plt.legend()
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,4)
+plt.imshow(Backlighter, extent=(0,1200,0,1200))
+plt.set_cmap('viridis')
 plt.title('Backlighter')
+plt.legend()
+plt.clim(0,5000)
+plt.colorbar(location='bottom')
+plt.savefig('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Low_pass_backlighter.png',bbox_inches='tight')
+
+plt.show()
+
+plt.figure()
+plt.subplot(3,2,1)
+plt.imshow(Backlighter,extent=(0,1200,0,1200))
+plt.title('Backlighter')
+plt.ylabel('Distance ($\mu m$)')
+plt.legend()
 plt.colorbar()
 
 plt.subplot(3,2,2)
-plt.imshow(fit)
+plt.imshow(fit,extent=(0,1200,0,1200))
 plt.title('fit')
 plt.colorbar()
 
 plt.subplot(3,2,3)
 plt.plot(np.arange(0,400), line_out_backlighter_x)
+plt.xlabel('Pixel number')
+plt.ylabel('Intensity [A.U]')
 
 plt.subplot(3,2,4)
 plt.plot(np.arange(0,400), line_out_gauss_x)
+plt.xlabel('Pixel number')
+plt.ylabel('Intensity [A.U]')
 
 plt.subplot(3,2,5)
 plt.plot(np.arange(0,400), line_out_backlighter_y)
+plt.xlabel('Pixel number')
+plt.ylabel('Intensity [A.U]')
 
 plt.subplot(3,2,6)
 plt.plot(np.arange(0,400), line_out_gauss_y)
+plt.xlabel('Pixel number')
+plt.ylabel('Intensity [A.U]')
 #plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Backlighter_fitting.png',bbox_inches='tight')
 plt.show()
 
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Shot_4_no_profile',transmission)
-np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Backligher_shot_4',fit)
+#np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Shot_4_no_profile',transmission)
+#np.save('C:\Internship\Internship-\Clean code\Data\Strip 3\Shots\Backlighter\Backligher_shot_4',fit)
 
