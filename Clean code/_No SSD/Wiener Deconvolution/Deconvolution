@@ -47,8 +47,8 @@ gauss=makeGaussian(400, 2, 22, 22, 0, center=(200,200))
     
 
 #image data
-Backlighter_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_3.npy')
-Backlighter_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_4.npy')
+Backlighter_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 1\Shots\Backlighter\Backligher_shot_2.npy')
+Backlighter_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 1\Shots\Backlighter\Backligher_shot_3.npy')
 
 #This aligning Backligher_2 wrt Baclkighter_1 
 shape=np.empty((800,800))
@@ -59,7 +59,7 @@ for j in range(int(y_-n/2),int(y_+n/2)):
     for i in range(int(x_-n/2),int(x_+n/2)):
             shape[i,j]=Backlighter_1[i-int((x_-n/2)),j-int((y_-n/2))]
 
-shift=np.array([46,3])
+shift=np.array([0,0])
 
 Backlighter_1=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
@@ -71,14 +71,14 @@ for j in range(int(y_-n/2),int(y_+n/2)):
     for i in range(int(x_-n/2),int(x_+n/2)):
             shape[i,j]=Backlighter_2[i-int((x_-n/2)),j-int((y_-n/2))]
 
-shift=np.array([115,7])
+shift=np.array([40,1])
 Backlighter_2=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
 Backlighter_1=clean(Backlighter_1,1,1)
 Backlighter_2=clean(Backlighter_2,1,1)
 
-Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy'),0,0) + Backlighter_1
-Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy'),0,0) + Backlighter_2
+Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 1\Shots\Backlighter\Correlated shots\Shot_2_correlated.npy'),0,0) + Backlighter_1
+Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\_No SSD\Data\Strip 1\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy'),0,0) + Backlighter_2
 
 #Getting an average backlighter profile
 Backlighter= (Backlighter_1+Backlighter_1)/2 
@@ -113,17 +113,17 @@ plt.figure()
 plt.subplot(1,3,1,)
 plt.imshow(Shot_1)
 plt.colorbar(location='bottom')
-plt.clim(0,7000)
+plt.clim(0,2500)
 
 plt.subplot(1,3,2,)
 plt.imshow(Shot_2)
 plt.colorbar(location='bottom')
-plt.clim(0,7000)
+plt.clim(0,2500)
 
 plt.subplot(1,3,3,)
 plt.imshow(((np.abs(np.fft.ifftshift(np.fft.ifft2(C_ft))))))
 plt.colorbar(location='bottom')
-plt.clim(0,7000)
+plt.clim(0,2500)
 
 plt.show()
 
@@ -132,24 +132,24 @@ plt.subplot(1,3,1)
 plt.imshow(((np.abs(np.fft.ifftshift(np.fft.ifft2(C_ft))))), extent=[0,1200,0,1200])
 plt.xlabel('Distance ($\mu m$)')
 plt.ylabel('Distance ($\mu m$)')
-plt.clim(0,7000)
+plt.clim(0,2500)
 plt.colorbar(location='bottom', label='Intensity [A.U]')
 plt.title('$C(x)$')
 plt.legend()
 plt.set_cmap('viridis')
 
 plt.subplot(1,3,2)
-plt.imshow((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))),extent=[0,1200,0,1200])
+plt.imshow((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))#,extent=[0,1200,0,1200])
 plt.xlabel('Distance ($\mu m$)')
 plt.ylabel('Distance ($\mu m$)')
 plt.set_cmap('viridis')
-plt.clim(0,7000)
+plt.clim(0,2500)
 plt.title('Reconstructed Shot')
 plt.legend()
 plt.colorbar(location='bottom', label='Intensity [A.U]')
 
 plt.subplot(1,3,3)
-plt.imshow(od[100:300,50:250], extent=[0,600,0,600])
+plt.imshow(od[50:250,100:300])#, extent=[0,600,0,600])
 plt.xlabel('Distance ($\mu m$)')
 plt.ylabel('Distance ($\mu m$)')
 plt.set_cmap('viridis')
@@ -161,4 +161,4 @@ plt.legend()
 plt.show()
 
 
-#np.save('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[100:300,50:250])
+np.save('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 1\OD_pair_2',od[50:250,100:300])

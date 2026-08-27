@@ -36,7 +36,7 @@ plt.stairs(No_SSD_Counts, No_SSD_Bins_pair_2, label='No SSD' )
 #plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
 plt.xlabel('Frequency/ $mm^{-1}$')
 plt.ylabel('Fourier amplitude')
-
+plt.yscale('log')
 #plt.ylim([0,2000])
 plt.xlim([0,60])
 plt.legend()
