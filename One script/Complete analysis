@@ -1,0 +1,521 @@
+import pyhdf 
+from pyhdf.SD import SD, SDC
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.colors as colors
+import scipy
+from scipy import signal, datasets
+import skimage
+from scipy.special import expit
+from scipy.optimize import curve_fit
+from scipy.stats import chisquare
+
+def load_hdf_BCcor(shotNum, ccdNum, timNum):
+    """
+    This code loads the all radiographic strips for a single shot. Strips are seperated in time vertically, increasing time step up the grid.
+    """
+    file_name = f"C:\Internship\Internship-\Clean code\_No SSD\Data\XRFC3CCD-xrfc3_t4_117321.hdf"
+
+    hdf_file  = SD(file_name, SDC.READ)
+    sds_obj   = hdf_file.select(0)
+    data      = sds_obj.get()
+    return data[0] - data[1]
+
+# Backlighter is SFC3CCD in TIM04
+shot_Number = 117315
+ccd_Number  = 3
+tim_Number  = 4
+
+Full_Radiogaph   = load_hdf_BCcor(shot_Number, ccd_Number, tim_Number)
+
+
+"""
+This code chooses a strip. Strips are simplyy obtained by slicing the Full_Radiograph image. The format is pretty contstant for all shots, but just make sure you 
+do not crop out any of the data when prodcuing the strip.
+"""
+
+Strip_1=Full_Radiogaph[1600:2000,85:1965]
+Strip_2=Full_Radiogaph[1100:1500,85:1965]
+Strip_3=Full_Radiogaph[600:1000,85:1965]
+Strip_4=Full_Radiogaph[150:550,85:1965]
+
+"""
+With all the strips split up, we now want to get our individual images. First, however, we reomve background noise to help to accenuate details
+"""
+
+def clean(m,q,w): 
+    """"
+    This fucntion removes to noise due to digitilisation. The photos are scanned in in vertically, hence there is some resiudal vertical noise which is much 
+    higher that the intenisty of the shots. Hence we just set it to zero (intensity is usually highere than 60,000). m is the matix, q is the cut off value, 
+    w is the value we set this to
+    """                  
+    M=m
+    indexs=np.where( m < q)
+    row_index=indexs[0]
+    column_index=indexs[1]
+    for i, j in zip(row_index, column_index):
+        M[i,j]=w
+    return M 
+
+def flat_noise(m):              
+    """"
+    This creates a flat array of the same dimentions of the entry m of noise. This will be used to remove the background noise from the image
+    """
+    M=clean(m,0,0) 
+    z=M[0:100,0:100] 
+    z=z.ravel()
+    average=np.average(z)
+    shape=np.zeros((400,1880))
+    for j in range(0,1880):
+        for i in range(0,400):
+            shape[i,j]=average
+    return shape
+
+
+def Noise(m):
+    """
+    This takes a strip, m, and  removes the background and digitisation noise from the strip, returning a clean array only the noise. This is done by chosing a
+    sample of pure noise in the image, averaging over this sample, and then filling a flat array withthis noise
+    """
+#reading 1-4 as left-right
+    s1=m
+    #circle 1 
+    for j in range(0,1880):
+        for i in range(0,400):
+            if (i-200)**2 + (j-300)**2 <= 180**2:# and (i-200)**2 + (j-300)**2 >= 175**2 :
+                s1[i,j]=0
+
+    #circle 2
+    for j in range(0,1880):
+        for i in range(0,400):
+            if (i-200)**2 + (j-760)**2 <= 180**2:# and (i-200)**2 + (j-760)**2 >= 175**2 :
+                s1[i,j]=0           
+
+    #circle 3
+    for j in range(0,1880):
+        for i in range(0,400):
+            if (i-200)**2 + (j-1200)**2 <= 180**2:# and (i-200)**2 + (j-1200)**2 >= 175**2 :
+                s1[i,j]=0            
+
+    #circle 4
+    for j in range(0,1880):
+        for i in range(0,400):
+            if (i-200)**2 + (j-1650)**2 <= 180**2:# and (i-200)**2 + (j-1650)**2 >= 175**2 :
+                s1[i,j]=0   
+
+
+    Noise= (flat_noise(s1))
+
+    return Noise
+
+
+def background_removal(m):
+    """
+    This takes a strip m, and removes the background noise to give a strip containing only shot information. Please note. Background isnt being removed, 
+    but the effect is miminmal. Should be an easy debug done soon.
+    """
+   
+    return clean(m) 
+
+Clean_strip_1=background_removal(Strip_1)
+Clean_strip_2=background_removal(Strip_2)
+Clean_strip_3=background_removal(Strip_3)
+Clean_strip_4=background_removal(Strip_4)
+
+"""
+We now have the clean strips. We now splice the strips to get individual images. Once again, make sure you aren't cropping out any information!
+"""
+
+Strip_1_image_1=Clean_strip_1[0:400,100:500]
+Strip_1_image_2=Clean_strip_1[0:400,560:960]
+Strip_1_image_3=Clean_strip_1[0:400,1000:1400]
+Strip_1_image_4=Clean_strip_1[0:400,1450:1850]
+
+Strip_2_image_1=Clean_strip_2[0:400,100:500]
+Strip_2_image_2=Clean_strip_2[0:400,560:960]
+Strip_2_image_3=Clean_strip_2[0:400,1000:1400]
+Strip_2_image_4=Clean_strip_2[0:400,1450:1850]
+
+Strip_3_image_1=Clean_strip_3[0:400,100:500]
+Strip_3_image_2=Clean_strip_3[0:400,560:960]
+Strip_3_image_3=Clean_strip_3[0:400,1000:1400]
+Strip_3_image_4=Clean_strip_3[0:400,1450:1850]
+
+Strip_4_image_1=Clean_strip_4[0:400,100:500]
+Strip_4_image_2=Clean_strip_4[0:400,560:960]
+Strip_4_image_3=Clean_strip_4[0:400,1000:1400]
+Strip_4_image_4=Clean_strip_4[0:400,1450:1850]
+
+"""
+With individual images, we can now apply a low-filter to get a rough image of the backlighter profile, and then use Scipy to fit a 2D super-Gaussian
+"""
+
+def calculate_2dft(input):         
+    """
+    
+    """  
+    ft = np.fft.ifftshift(input)
+    ft = np.fft.fft2(ft)
+    return np.fft.fftshift(ft)
+
+
+def Haan_filter(n,d):            
+    """
+    This function produces a haan filter of n size on an array of size dxd. Assuming the Haan filtered is centred in the array
+    """
+    win = skimage.filters.window('hann', (n, n))
+    Haan_filter=np.empty((d,d))
+    y,x = int(d/2),int(d/2)                             #x,y is the centre point
+
+    for j in range(int(y-n/2),int(y+n/2)):
+        for i in range(int(x-n/2),int(x+n/2)):
+            Haan_filter[i,j]=win[i-int((x-n/2)),j-int((y-n/2))]
+
+    return Haan_filter
+
+def makeGaussian( M, Amp, rank, std_x, std_y, theta, centre_x, centre_y):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+    """ Make a square gaussian kernel.                             #theta mus be [-pi/4, pi/4]
+                                                                    #M is  Nx2 matrix where N is the no of data 
+    size is the length of a side of the square
+    fwhm is full-width-half-maximum, which
+    can be thought of as an effective radius.
+    """
+
+    x, y= M
+
+    x0 = centre_x
+    y0 = centre_y
+
+
+    a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
+    b= -((np.cos(theta) * np.sin(theta))/(2*std_x**2))+((np.cos(theta) * np.sin(theta))/(2*std_y**2))   
+    c= ((np.sin(theta))**2/(2*std_x**2))+((np.cos(theta))**2/(2*std_y**2))
+
+    return (Amp*np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
+
+def Backlighter_fit(image,n):
+    """
+    Produces a fit of the backlighter profile of the corresponding image, with n denoting the sixe of the Haan filter. I've found n=15 works well. Print 
+    line outs in the y and x axis to check the fit isn't doing anything weird. 
+    """
+    x, y = np.arange(0, 400), np.arange(0, 400)
+    X, Y = np.meshgrid(x, y)
+
+    Filter=makeGaussian((X,Y),1,2,5,5,0,200,200)
+    Backlighter= np.abs(np.fft.ifftshift(np.fft.ifft2(calculate_2dft(image)*Haan_filter(n,len(image)))))      #Backlighter profile for this shot
+
+    xdata = np.vstack((X.ravel(), Y.ravel()))
+
+    #turning space, data into 1D arrays so curve fit can work
+    ydata= Backlighter.ravel()
+
+    #initial guesses; may have issues with the centre
+    p0=([np.max(ydata),1,100,100,0,200,200])
+
+    #Getting params 
+    popt, pcov = curve_fit(makeGaussian, xdata, ydata, p0)
+
+    #getting the optimised values
+    Amp=popt[0]
+    rank=popt[1]
+    std_x=popt[2]
+    std_y=popt[3]
+    theta=popt[4]
+    centre_x=popt[5]
+    centre_y=popt[6]
+
+    #getting the errors
+    errors=np.array([])
+    for i in range(0,len(pcov)):
+        errors=np.append(errors, pcov[i,i]**(0.5))
+
+    #getting fit
+    fit=makeGaussian((X,Y), Amp, rank,std_x,std_y,theta,centre_x, centre_y)
+
+    return fit
+
+Strip_1_image_1_backlighter=Backlighter_fit(Strip_1_image_1, 15)
+Strip_1_image_2_backlighter=Backlighter_fit(Strip_1_image_2, 15)
+Strip_1_image_3_backlighter=Backlighter_fit(Strip_1_image_3, 15)
+Strip_1_image_4_backlighter=Backlighter_fit(Strip_1_image_4, 15)
+
+Strip_2_image_1_backlighter=Backlighter_fit(Strip_2_image_1, 15)
+Strip_2_image_2_backlighter=Backlighter_fit(Strip_2_image_2, 15)
+Strip_2_image_3_backlighter=Backlighter_fit(Strip_2_image_3, 15)
+Strip_2_image_4_backlighter=Backlighter_fit(Strip_2_image_4, 15)
+
+Strip_3_image_1_backlighter=Backlighter_fit(Strip_3_image_1, 15)
+Strip_3_image_2_backlighter=Backlighter_fit(Strip_3_image_2, 15)
+Strip_3_image_3_backlighter=Backlighter_fit(Strip_3_image_3, 15)
+Strip_3_image_4_backlighter=Backlighter_fit(Strip_3_image_4, 15)
+
+Strip_4_image_1_backlighter=Backlighter_fit(Strip_4_image_1, 15)
+Strip_4_image_2_backlighter=Backlighter_fit(Strip_4_image_2, 15)
+Strip_4_image_3_backlighter=Backlighter_fit(Strip_4_image_3, 15)
+Strip_4_image_4_backlighter=Backlighter_fit(Strip_4_image_4, 15)
+
+"""
+Now we have the backlighter profiles. We now need to correlate the images of strip. This requires manual sampling (apologies). Removing the backlighter profile helps 
+to accenuate detail. For sampling, chose a unique detail, keep the sample box to tight to this detail, and be patient. This will take a lot of rerunning, so it is
+copy the corellation code into it's own script, and save the images as npy files, and import them into this script.
+"""
+
+"""
+Removing the background to accenuate details
+"""
+Strip_1_image_1_no_backlighter= Strip_1_image_1 - Strip_1_image_1_backlighter
+Strip_1_image_2_no_backlighter= Strip_1_image_2 - Strip_1_image_2_backlighter
+Strip_1_image_3_no_backlighter= Strip_1_image_3 - Strip_1_image_3_backlighter
+Strip_1_image_4_no_backlighter= Strip_1_image_4 - Strip_1_image_4_backlighter
+
+Strip_2_image_1_no_backlighter= Strip_2_image_1 - Strip_2_image_1_backlighter
+Strip_2_image_2_no_backlighter= Strip_2_image_2 - Strip_2_image_2_backlighter
+Strip_2_image_3_no_backlighter= Strip_2_image_3 - Strip_2_image_3_backlighter
+Strip_2_image_4_no_backlighter= Strip_2_image_4 - Strip_2_image_4_backlighter
+
+Strip_3_image_1_no_backlighter= Strip_3_image_1 - Strip_3_image_1_backlighter
+Strip_3_image_2_no_backlighter= Strip_3_image_2 - Strip_3_image_2_backlighter
+Strip_3_image_3_no_backlighter= Strip_3_image_3 - Strip_3_image_3_backlighter
+Strip_3_image_4_no_backlighter= Strip_3_image_4 - Strip_3_image_4_backlighter
+
+Strip_4_image_1_no_backlighter= Strip_4_image_1 - Strip_4_image_1_backlighter
+Strip_4_image_2_no_backlighter= Strip_4_image_2 - Strip_4_image_2_backlighter
+Strip_4_image_3_no_backlighter= Strip_4_image_3 - Strip_4_image_3_backlighter
+Strip_4_image_4_no_backlighter= Strip_4_image_4 - Strip_4_image_4_backlighter
+
+"""
+Chosing a sampling region, or region of interest, Roi.
+"""
+Roi= Shot_2[220:270,100:150]
+
+""""
+This finds the centre of the sample correlates the sample with the adjacent image, calculates the shift, and then creates 'new shape' ; the readjusted image.
+Make sure you record shift, it is needed for the deconvolution. 
+"""
+centre=np.array([int((Roi[0,0]+Roi[0,-1])/2),int((Roi[1,0]+Roi[1,-1])/2)])
+corr = signal.correlate2d(Shot_3, Roi,  boundary='symm', mode='same')
+y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
+print(x,y)
+
+n=len(Shot_4)
+shape=np.empty((800,800))
+y_,x_ = 400,400 
+
+for j in range(int(y_-n/2),int(y_+n/2)):
+    for i in range(int(x_-n/2),int(x_+n/2)):
+            shape[i,j]=Shot_4[i-int((x_-n/2)),j-int((y_-n/2))]
+
+shift=np.array([x,y]) - centre 
+print(shift)
+New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
+
+
+plt.figure()
+plt.subplot(1,4,1)
+plt.imshow(Shot_2)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+
+plt.subplot(1,4,2)
+plt.imshow(Roi)
+plt.colorbar(location='bottom')
+plt.clim(0,500)
+
+plt.subplot(1,4,3)
+plt.imshow(Shot_3)
+plt.plot(x,y, 'ro')
+plt.clim(0,300)
+plt.colorbar(location='bottom')
+
+plt.subplot(1,4,4)
+plt.imshow(corr)
+plt.plot(x,y, 'ro')
+plt.colorbar(location='bottom')
+plt.show()
+
+#showing before and after correlation
+
+plt.figure()
+plt.subplot(2,2,1)
+plt.imshow(Shot_2)
+plt.clim(0,500)
+plt.colorbar(location='bottom')
+
+
+plt.subplot(2,2,2)
+plt.imshow(Shot_3)
+plt.plot(x,y,'ro')
+plt.clim(0,500)
+plt.colorbar(location='bottom')
+
+
+plt.subplot(2,2,3)
+plt.imshow(Shot_2)
+plt.clim(0,500)
+plt.colorbar(location='bottom')
+
+plt.subplot(2,2,4)
+plt.imshow(New_shape)
+plt.clim(0,500)
+plt.colorbar(location='bottom')
+plt.plot(95,120, 'ro')
+plt.show()
+
+"""
+Once you have correlated your images, save them. I will define them all as constants below, just to demonstrate the deconvolution code. 
+"""
+
+Strip_1_image_1_correlated=1
+Strip_1_image_2_correlated=1
+Strip_1_image_3_correlated=1
+Strip_1_image_4_correlated=1
+
+Strip_2_image_1_correlated=1
+Strip_2_image_2_correlated=1
+Strip_2_image_3_correlated=1
+Strip_2_image_4_correlated=1
+
+Strip_3_image_1_correlated=1
+Strip_3_image_2_correlated=1
+Strip_3_image_3_correlated=1
+Strip_3_image_4_correlated=1
+
+Strip_4_image_1_correlated=1
+Strip_4_image_2_correlated=1
+Strip_4_image_3_correlated=1
+Strip_4_image_4_correlated=1
+
+"""
+With correlated images we can now complete deconvolution. We add the backlighter back into the correlated images, being careful to ensure we account for the shift 
+caused by correlation. 
+"""
+
+def makeGaussianfilter(size, rank, std_x, std_y, theta, center=None):    #this code comes from stack overflow, modified to be elliptical and have rotation. see link, https://stackoverflow.com/questions/7687679/how-to-generate-2d-gaussian-with-python
+    """ 
+    This is slightly different gaussain code. This doesn't take a matrix for an input, as it did for the gaussian fit. We use this to create a low pass
+    filter.
+    """
+
+    x = np.arange(0, size, 1, float)
+    y = x[:,np.newaxis]
+
+    if center is None:
+        x0 = y0 = size // 2
+    else:
+        x0 = center[0]
+        y0 = center[1]
+
+
+    a= ((np.cos(theta))**2/(2*std_x**2))+((np.sin(theta))**2/(2*std_y**2))     
+    b= -((np.cos(theta) * np.sin(theta))/(2*std_x**2))+((np.cos(theta) * np.sin(theta))/(2*std_y**2))   
+    c= ((np.sin(theta))**2/(2*std_x**2))+((np.cos(theta))**2/(2*std_y**2))
+
+    return (np.exp(-(a*((x-x0)**2) + 2*b*(x-x0)*(y-y0) + c*((y-y0)**2))**rank))
+
+gauss=makeGaussianfilter(400, 2, 25, 25, 0, center=(200,200))   
+    
+"""
+Alligning our backlighters so they match our correlated images
+"""
+#This aligning Backligher_2 wrt Baclkighter_1 
+shape=np.empty((800,800))
+y_,x_ = 400,400 
+n=len(Backlighter_1)
+
+for j in range(int(y_-n/2),int(y_+n/2)):
+    for i in range(int(x_-n/2),int(x_+n/2)):
+            shape[i,j]=Backlighter_1[i-int((x_-n/2)),j-int((y_-n/2))]
+
+shift=np.array([0,0])  #Shift is from correlation so again, make sure to record this when doing correlation!!
+
+Backlighter_1=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
+
+shape=np.empty((800,800))
+y_,x_ = 400,400 
+n=len(Backlighter_2)
+
+for j in range(int(y_-n/2),int(y_+n/2)):
+    for i in range(int(x_-n/2),int(x_+n/2)):
+            shape[i,j]=Backlighter_2[i-int((x_-n/2)),j-int((y_-n/2))]
+
+shift=np.array([-1,-1])
+Backlighter_2=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
+
+Backlighter_1=clean(Backlighter_1,1,1)
+Backlighter_2=clean(Backlighter_2,1,1)
+
+"""
+Adding the backlighter back into our correlated images
+"""
+im_1=Strip_1_image_1_correlated + Backlighter_1
+im_2=Strip_1_image_2_correlated + Backlighter_2
+
+#Getting an average backlighter profile
+Backlighter= (Backlighter_1+Backlighter_1)/2 
+
+"""
+Prodcuing transmission images in order to get our signal, S_x, and noise, N_x, images. 
+"""
+t_1=im_1/Backlighter_1
+t_2=im_2/Backlighter_2
+
+S_x_t= (t_1 + t_2)  #should these be divided by 2
+N_x_t= (t_1 - t_2)
+
+S_x=S_x_t * Backlighter
+N_x=N_x_t * Backlighter
+
+"""
+Fourier transforms required for the Wiener deconvolution. MTF for the framing camera is from smalyuk. The pinhole MTF is produced by MATLAB code created by Luke
+Ceurvorst. 
+
+"""
+
+mtf_pinhole=np.load('C:\Internship\Internship-\One script\pinhole_mft.npy')
+x=np.arange(0,400)
+y=np.arange(0,400)
+Sampling_freq_x=np.sort(np.fft.fftfreq(400))
+Sampling_freq_y=np.sort(np.fft.fftfreq(400))
+
+"""
+Following bit of code creates the 2D k space requried to make a 2D MTF for the framing camera
+"""
+K_tot=np.empty([400,400])
+for i in range(0,len(Sampling_freq_x)):
+    q=np.array([])
+    for j in range(0,len(Sampling_freq_y)):
+        p=(Sampling_freq_y[j]**2 + Sampling_freq_x[i]**2)**(1/2)
+        q=np.append(q,p)
+    K_tot[i]=q
+
+def M_fc(f,alpha_1,alpha_2,sigma_1,sigma_2):                    #MTF framing camera. alphas/sigmas are experimentall determined, taken from Smalyuk (please see report)
+    p=alpha_1*np.exp(-(sigma_1 * (f/6))**2)
+    q=alpha_2*np.exp(-(sigma_2 * (f/6))**2)
+    return(p+q)
+
+mtf_fc=(M_fc(K_tot, 0.89, 0.22, 105.4, 2356.8))  
+mtf_fc_norm= mtf_fc/np.max(mtf_fc)
+mtf_tot=  mtf_pinhole * mtf_fc 
+
+Mtf= mtf_tot
+S_ft= calculate_2dft(S_x) 
+N_ft= calculate_2dft(N_x) 
+C_ft= ((S_ft) + (N_ft))/2
+
+"""
+Applying Weiner deconvolution to the C_ft image. Note each deconstructred image takes a pair of images from a strip. Note we have to look at the frequency spectrum 
+S_ft, N_ft. There is an overlap after a certain k value, which means we can't tell the different between the signal and noise. Hence, we apply a low pass filter around
+this k value. Please see the frequency binning fil to do this. 
+"""
+
+filter_= np.divide((np.abs(S_ft))**2, (np.abs(S_ft))**2 + (np.abs(N_ft))**2)
+Restored= ((C_ft/(Mtf)) * filter_) * gauss
+Restored_im=(np.abs(np.fft.ifftshift(np.fft.ifft2(Restored))))
+
+"""
+Producing the optical density image (od) of a deconvolved image. We assume that the measured intensity to be given by the restored deconvolved image, and the 
+incident intensity given by the average backlighter fit. 
+"""
+od=-np.log(((np.abs(np.fft.ifftshift(np.fft.ifft2(Restored)))))/(Backlighter))
+
+
