@@ -47,8 +47,8 @@ gauss=makeGaussian(400, 2, 25, 25, 0, center=(200,200))
     
 
 #image data
-Backlighter_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_3.npy')
-Backlighter_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Backligher_shot_4.npy')
+Backlighter_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Backligher_shot_2.npy')
+Backlighter_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Backligher_shot_2.npy')
 
 #This aligning Backligher_2 wrt Baclkighter_1 
 shape=np.empty((800,800))
@@ -59,7 +59,7 @@ for j in range(int(y_-n/2),int(y_+n/2)):
     for i in range(int(x_-n/2),int(x_+n/2)):
             shape[i,j]=Backlighter_1[i-int((x_-n/2)),j-int((y_-n/2))]
 
-shift=np.array([76,45])
+shift=np.array([0,0])
 
 Backlighter_1=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
@@ -71,14 +71,14 @@ for j in range(int(y_-n/2),int(y_+n/2)):
     for i in range(int(x_-n/2),int(x_+n/2)):
             shape[i,j]=Backlighter_2[i-int((x_-n/2)),j-int((y_-n/2))]
 
-shift=np.array([112,47])
+shift=np.array([-1,-1])
 Backlighter_2=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shift[0]))]
 
 Backlighter_1=clean(Backlighter_1,1,1)
 Backlighter_2=clean(Backlighter_2,1,1)
 
-Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy'),0,0) + Backlighter_1
-Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated.npy'),0,0) + Backlighter_2
+Shot_1=clean(np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Correlated shots\Shot_2_correlated.npy'),0,0) + Backlighter_1
+Shot_2=clean(np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy'),0,0) + Backlighter_2
 
 #Getting an average backlighter profile
 Backlighter= (Backlighter_1+Backlighter_1)/2 
@@ -145,7 +145,7 @@ plt.legend()
 plt.colorbar(location='bottom')
 
 plt.subplot(1,3,3)
-plt.imshow(od[50:250,50:250])
+plt.imshow(od[25:225,150:350])
 plt.set_cmap('gray')
 plt.clim(-1,1)
 plt.colorbar(location='bottom')
@@ -155,4 +155,4 @@ plt.legend()
 plt.show()
 
 
-np.save('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\OD_pair_3',od[50:250,50:250])
+np.save('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 1\OD_pair_2',od[25:225,150:350])

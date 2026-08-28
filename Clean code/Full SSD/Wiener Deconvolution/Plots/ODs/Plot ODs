@@ -1,19 +1,17 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
-SSD_Counts_pair_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_counts.npy')
-SSD_Bins_pair_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_bins.npy')
-SSD_Counts_pair_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
-SSD_Bins_pair_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
-SSD_Counts_pair_3=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_counts.npy')
-SSD_Bins_pair_3=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_bins.npy')
 
-No_SSD_Counts_pair_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_counts.npy')
-No_SSD_Bins_pair_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_1_bins.npy')
-No_SSD_Counts_pair_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
-No_SSD_Bins_pair_2=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
-No_SSD_Counts_pair_3=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_counts.npy')
-No_SSD_Bins_pair_3=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_3_bins.npy')
+SSD_Counts_pair_2_strip_4=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
+SSD_Counts_pair_2_strip_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 1\Counts, Bins\pair_2_bins.npy')
+SSD_Bins=np.load('C:\Internship\Internship-\Clean code\Full SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
+
+SSD_Counts_pair_2_strip_1=np.delete(SSD_Counts_pair_2_strip_1, len(SSD_Counts_pair_2_strip_1)-1)
+
+No_SSD_Counts_pair_2_strip_4=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_counts.npy')
+No_SSD_Counts_pair_2_strip_1=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 1\Counts, Bins\pair_2_counts.npy')
+No_SSD_Bins=np.load('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Strip 4\Counts, Bins\pair_2_bins.npy')
+
 
 def f(k):
     p=3
@@ -21,24 +19,24 @@ def f(k):
     l=167
     return 2500*p*u*2/(l*(k)**2)
 
-SSD_Counts=(SSD_Counts_pair_1 + SSD_Counts_pair_2 + SSD_Counts_pair_3)/3 
-No_SSD_Counts=(No_SSD_Counts_pair_1 + No_SSD_Counts_pair_2 + No_SSD_Counts_pair_3)/3 
+SSD_Counts=(SSD_Counts_pair_2_strip_4/SSD_Counts_pair_2_strip_1)
+No_SSD_Counts=(No_SSD_Counts_pair_2_strip_4/No_SSD_Counts_pair_2_strip_1)
 
 plt.figure()
 #plt.stairs(SSD_Counts_pair_1, SSD_Bins_pair_1, label='SSD pair 1' )
-plt.stairs(SSD_Counts, SSD_Bins_pair_2, label='SSD' )
+plt.stairs(SSD_Counts, SSD_Bins, label='SSD' )
 #plt.stairs(SSD_Counts_pair_3, SSD_Bins_pair_3, label='SSD pair 3' )
 
 #plt.stairs(No_SSD_Counts_pair_1, No_SSD_Bins_pair_1, label='No SSD pair 1' )
-plt.stairs(No_SSD_Counts, No_SSD_Bins_pair_2, label='No SSD' )
+plt.stairs(No_SSD_Counts, No_SSD_Bins, label='No SSD' )
 #plt.stairs(No_SSD_Counts_pair_3, No_SSD_Bins_pair_3, label='No SSD pair 3' )
 
 #plt.plot(np.arange(0,50,0.5), f(np.arange(0,50,0.5)),linestyle='dashed', color='black', label='Haan Saturation limit')
 plt.xlabel('Frequency/ $mm^{-1}$')
-plt.ylabel('Fourier amplitude')
+plt.ylabel('Fourier amplitude (Normalised)')
 plt.yscale('log')
 #plt.ylim([0,2000])
-plt.xlim([0,60])
+plt.xlim([0,100])
 plt.legend()
 #plt.savefig('C:\Internship\Internship-\Clean code\_No SSD\Wiener Deconvolution\Plots\ODs\Optical density comparison.png', bbox_inches='tight')
 plt.show()

@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 
-Strip=np.load('c:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_raw.npy')
-Strip_noise=np.load('c:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_raw.npy')
+Strip=np.load('c:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_raw.npy')
+Strip_noise=np.load('c:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_raw.npy')
 #reading 1-4 as left-right
 
 #circle 1 
@@ -30,10 +30,10 @@ for j in range(0,1880):
         if (i-200)**2 + (j-1650)**2 <= 180**2:# and (i-200)**2 + (j-1650)**2 >= 175**2 :
             Strip_noise[i,j]=0   
 
-np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_noise.npy', Strip_noise)        
+np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_noise.npy', Strip_noise)        
 
-S1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_raw.npy')
-S2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_noise.npy')
+S1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_raw.npy')
+S2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_noise.npy')
 
 def clean(m):                   #Removes digitisation noise
     M=m
@@ -65,4 +65,4 @@ plt.clim(0,2000)
 plt.show() 
 
 
-np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Strip_4_clean.npy',Clean_Strip)
+np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Strip_1_clean.npy',Clean_Strip)

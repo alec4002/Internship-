@@ -3,14 +3,14 @@ import numpy as np
 from scipy import signal, datasets, ndimage
 
 
-Shot_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Shot_1_no_profile.npy')
-Shot_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_2_correlated.npy')
-Shot_3=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_3_correlated.npy')
-Shot_4=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Shot_4_no_profile.npy')
+Shot_1=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Shot_1_no_profile.npy')
+Shot_2=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Shot_2_no_profile.npy')
+Shot_3=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Shot_3_no_profile.npy')
+Shot_4=np.load('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Shot_4_no_profile.npy')
 
-Roi= Shot_3[80:160,30:160]
-centre=np.array([95,120])
-corr = signal.correlate2d(Shot_4[0:300,0:300], Roi,  boundary='symm', mode='same')
+Roi= Shot_2[220:270,100:150]
+centre=np.array([125,245])
+corr = signal.correlate2d(Shot_3, Roi,  boundary='symm', mode='same')
 y, x = np.unravel_index(np.argmax(corr), corr.shape)  # find the match
 print(x,y)
 
@@ -29,7 +29,7 @@ New_shape=shape[(200+shift[1]):(400+(200+shift[1])),(200+shift[0]):(400+(200+shi
 
 plt.figure()
 plt.subplot(1,4,1)
-plt.imshow(Shot_3)
+plt.imshow(Shot_2)
 plt.colorbar(location='bottom')
 plt.clim(0,500)
 
@@ -39,7 +39,7 @@ plt.colorbar(location='bottom')
 plt.clim(0,500)
 
 plt.subplot(1,4,3)
-plt.imshow(Shot_4)
+plt.imshow(Shot_3)
 plt.plot(x,y, 'ro')
 plt.clim(0,300)
 plt.colorbar(location='bottom')
@@ -57,13 +57,13 @@ plt.show()
 
 plt.figure()
 plt.subplot(2,2,1)
-plt.imshow(Shot_3)
+plt.imshow(Shot_2)
 plt.clim(0,500)
 plt.colorbar(location='bottom')
 #plt.plot(110,240, 'ro')
 
 plt.subplot(2,2,2)
-plt.imshow(Shot_4)
+plt.imshow(Shot_3)
 plt.plot(x,y,'ro')
 plt.clim(0,500)
 plt.colorbar(location='bottom')
@@ -83,4 +83,4 @@ plt.plot(95,120, 'ro')
 #plt.savefig('C:\Internship\Internship-\Clean code\Data\Strip 4\Shots\Backlighter and Transmission shots\Correlated shots\Corrlation_example.png',bbox_inches='tight')
 plt.show()
 
-np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 4\Shots\Backlighter\Correlated shots\Shot_4_correlated',New_shape)
+np.save('C:\Internship\Internship-\Clean code\Full SSD\Data\Strip 1\Shots\Backlighter\Correlated shots\Shot_3_correlated',New_shape)
