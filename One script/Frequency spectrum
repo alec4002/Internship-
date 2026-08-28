@@ -10,13 +10,21 @@ and then a histogram is plotted to display the distribution.
 
 
 def calculate_2dft(input):              #Fucntion calculates the 2D fourier transform of a 2D matrix, 'input', centred about the central frequency    
+    """
+        Calculates the discrete 2D Fourier transform of a 2D image, using the FFT algorithm. The output is shifted to be centred around the central frequency.
+        It will return an array of the same dimensions as the input, filled with complex enterties. 
+    """  
     ft = np.fft.ifftshift(input)
     ft = np.fft.fft2(ft)
     return np.fft.fftshift(ft)
 
 
 
-def Sort(m):                                 #Takes our Dimension x 2 matrix, 'm', and removes repeat k values, stores the unique k values with their corresponding total fourier amplitude. This is found by averaging the complex amplitude before taking the absolute value. It returns a Nx2 matrix.           
+def Sort(m):    
+    """
+    Takes our Dimension x 2 matrix, 'm', and removes repeat k values, and stores the unique k values with their corresponding total fourier amplitude. 
+    This is found by averaging the complex amplitude before taking the absolute value. It returns a Nx2 matrix.
+    """                                        
     amps=np.array([])
     k_vals=np.unique(m[:,0]) 
 
@@ -32,7 +40,11 @@ def Sort(m):                                 #Takes our Dimension x 2 matrix, 'm
 
     return(k_vals,amps)            
 
-def Bin(m,p):                                               #Takes our Nx2  matrix 'm', which contains our k values and their corresponding amplitudes, and then stores them into a number of bins, 'p'. The bin edges are calculated automatically.
+def Bin(m,p):                                               
+    """
+    Takes our Nx2  matrix 'm', which contains our k values and their corresponding amplitudes, and then stores them into a number of bins, 'p'. 
+    The bin edges are calculated automatically. You do have to make sure that p allows the bins to have an equal amount of enteries 
+    """
     amps=np.array([])      
     bins=np.arange(0,np.max(m[:,0]),((np.max(m[:,0])))/p)
 

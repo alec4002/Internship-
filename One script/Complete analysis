@@ -10,6 +10,12 @@ from scipy.special import expit
 from scipy.optimize import curve_fit
 from scipy.stats import chisquare
 
+"""
+-----Analysis script-----
+This scrip contains all the made code required for the processing of planar targte shots from OMEGA. There is a report attached in the Git which goes into more 
+detail concerning the choices made and the theories implimented. 
+"""
+
 def load_hdf_BCcor(shotNum, ccdNum, timNum):
     """
     This code loads the all radiographic strips for a single shot. Strips are seperated in time vertically, increasing time step up the grid.
@@ -152,7 +158,8 @@ With individual images, we can now apply a low-filter to get a rough image of th
 
 def calculate_2dft(input):         
     """
-    
+    Calculates the discrete 2D Fourier transform of a 2D image, using the FFT algorithm. The output is shifted to be centred around the central frequency.
+    It will return an array of the same dimensions as the input, filled with complex enterties. 
     """  
     ft = np.fft.ifftshift(input)
     ft = np.fft.fft2(ft)
@@ -505,7 +512,7 @@ C_ft= ((S_ft) + (N_ft))/2
 """
 Applying Weiner deconvolution to the C_ft image. Note each deconstructred image takes a pair of images from a strip. Note we have to look at the frequency spectrum 
 S_ft, N_ft. There is an overlap after a certain k value, which means we can't tell the different between the signal and noise. Hence, we apply a low pass filter around
-this k value. Please see the frequency binning fil to do this. 
+this k value. Please see the frequency binning script to do this. 
 """
 
 filter_= np.divide((np.abs(S_ft))**2, (np.abs(S_ft))**2 + (np.abs(N_ft))**2)
